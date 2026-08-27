@@ -1,0 +1,1404 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Simülasyon | Vision Technologies</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700;800&display=swap" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js">
+
+    /* COMMAND VIDEO PLAYER */
+    const commandVideo = document.getElementById("simulationCommandVideo");
+    const commandTabs = document.querySelectorAll(".command-video-tab");
+    const activeCommandNumber = document.getElementById("activeCommandNumber");
+    const activeCommandTitle = document.getElementById("activeCommandTitle");
+    const activeCommandSubtitle = document.getElementById("activeCommandSubtitle");
+
+    let currentCommandIndex = 0;
+
+    function playCommandVideo(index){
+      const tab = commandTabs[index];
+      if(!tab || !commandVideo) return;
+
+      commandTabs.forEach((item) => item.classList.remove("active"));
+      tab.classList.add("active");
+
+      commandVideo.src = tab.dataset.video;
+      commandVideo.currentTime = 0;
+      commandVideo.play().catch(() => {});
+
+      if(activeCommandNumber) activeCommandNumber.textContent = tab.dataset.number;
+      if(activeCommandTitle) activeCommandTitle.textContent = tab.dataset.title;
+      if(activeCommandSubtitle) activeCommandSubtitle.textContent = tab.dataset.subtitle;
+
+      currentCommandIndex = index;
+    }
+
+    commandTabs.forEach((tab, index) => {
+      tab.addEventListener("click", () => {
+        playCommandVideo(index);
+      });
+    });
+
+    if(commandVideo){
+      commandVideo.addEventListener("ended", () => {
+        const nextIndex = (currentCommandIndex + 1) % commandTabs.length;
+        playCommandVideo(nextIndex);
+      });
+    }
+
+  </script>
+
+  <style>
+    :root{
+      --bg:#03040A;
+      --cyan:#00F5FF;
+      --blue:#007BFF;
+      --purple:#6C3BFF;
+      --white:#F5F7FA;
+      --muted:#8A94A6;
+      --panel:rgba(7,26,47,0.28);
+    }
+
+    *{
+      margin:0;
+      padding:0;
+      box-sizing:border-box;
+      font-family:'Poppins',sans-serif;
+    }
+
+    html{ scroll-behavior:smooth; }
+
+    body{
+      background:
+        radial-gradient(circle at 20% 20%, rgba(0,245,255,0.08), transparent 25%),
+        radial-gradient(circle at 80% 15%, rgba(108,59,255,0.10), transparent 25%),
+        linear-gradient(180deg, #03040A 0%, #050915 45%, #03040A 100%);
+      color:var(--white);
+      overflow-x:hidden;
+      min-height:100vh;
+    }
+
+    body::before{
+      content:"";
+      position:fixed;
+      inset:0;
+      background-image:
+        linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
+      background-size:80px 80px;
+      pointer-events:none;
+      z-index:-4;
+      mask-image:linear-gradient(to bottom, rgba(0,0,0,0.9), transparent 90%);
+    }
+
+    .cursor{
+      width:18px;
+      height:18px;
+      border:2px solid var(--cyan);
+      box-shadow:0 0 16px rgba(0,245,255,0.65), 0 0 34px rgba(108,59,255,0.28);
+      border-radius:50%;
+      position:fixed;
+      pointer-events:none;
+      transform:translate(-50%, -50%);
+      z-index:9999;
+      mix-blend-mode:screen;
+    }
+
+    .mouse-glow{
+      position:fixed;
+      width:260px;
+      height:260px;
+      border-radius:50%;
+      pointer-events:none;
+      z-index:1;
+      transform:translate(-50%, -50%);
+      background:radial-gradient(circle, rgba(0,245,255,0.16) 0%, rgba(108,59,255,0.08) 35%, transparent 70%);
+      filter:blur(18px);
+      opacity:0.75;
+      mix-blend-mode:screen;
+    }
+
+    .cursor-trail{
+      position:fixed;
+      width:8px;
+      height:8px;
+      border-radius:50%;
+      pointer-events:none;
+      z-index:9998;
+      transform:translate(-50%, -50%);
+      background:#00f5ff;
+      box-shadow:0 0 12px rgba(0,245,255,0.9), 0 0 28px rgba(108,59,255,0.45);
+      opacity:0;
+    }
+
+    header{
+      position:fixed;
+      top:0;
+      left:0;
+      width:100%;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      padding:20px 60px;
+      backdrop-filter:blur(12px);
+      background:linear-gradient(to bottom, rgba(3,4,10,0.82), rgba(3,4,10,0.28));
+      border-bottom:1px solid rgba(255,255,255,0.05);
+      z-index:1000;
+    }
+
+    .logo{
+      color:var(--cyan);
+      font-weight:800;
+      letter-spacing:0.5px;
+      text-shadow:0 0 16px rgba(0,245,255,0.25);
+    }
+
+    nav a{
+      margin-left:25px;
+      color:var(--white);
+      text-decoration:none;
+      opacity:0.88;
+      position:relative;
+      transition:0.25s ease;
+      font-weight:600;
+    }
+
+    nav a::after{
+      content:"";
+      position:absolute;
+      left:0;
+      bottom:-6px;
+      width:0;
+      height:1px;
+      background:linear-gradient(90deg,var(--cyan),var(--purple));
+      transition:0.25s ease;
+    }
+
+    nav a:hover, nav a.active{ color:var(--cyan); opacity:1; }
+    nav a:hover::after, nav a.active::after{ width:100%; }
+
+    /* SIMULATION VIDEO-LIKE HERO */
+    .simulation-video-section{
+      position:relative;
+      z-index:5;
+      min-height:100vh;
+      padding:108px 34px 82px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+    }
+
+    .simulation-stage{
+      width:min(1560px, 96%);
+      aspect-ratio:16 / 9;
+      position:relative;
+      overflow:hidden;
+      border-radius:38px;
+      border:1px solid rgba(0,245,255,0.24);
+      background:#03040A;
+      box-shadow:0 55px 150px rgba(0,0,0,0.58), inset 0 1px 0 rgba(255,255,255,0.08);
+      isolation:isolate;
+    }
+
+    .simulation-bg{
+      position:absolute;
+      inset:0;
+      width:100%;
+      height:100%;
+      object-fit:cover;
+      animation:bgPulse 15s ease-in-out infinite;
+      transform-origin:center center;
+      z-index:1;
+    }
+
+    @keyframes bgPulse{
+      0%,100%{ transform:scale(1); filter:brightness(0.78) contrast(1.06) saturate(1.04); }
+      50%{ transform:scale(1.035); filter:brightness(0.95) contrast(1.13) saturate(1.17); }
+    }
+
+    .simulation-overlay{
+      position:absolute;
+      inset:0;
+      z-index:2;
+      background:
+        radial-gradient(circle at 58% 42%, rgba(0,245,255,0.14), transparent 35%),
+        radial-gradient(circle at 22% 28%, rgba(108,59,255,0.08), transparent 30%),
+        linear-gradient(180deg, rgba(3,4,10,0.08), rgba(3,4,10,0.62));
+      pointer-events:none;
+    }
+
+    .simulation-grid{
+      position:absolute;
+      inset:0;
+      z-index:3;
+      background-image:
+        linear-gradient(rgba(0,245,255,0.045) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0,245,255,0.045) 1px, transparent 1px);
+      background-size:54px 54px;
+      opacity:0.42;
+      animation:gridMove 15s linear infinite;
+      pointer-events:none;
+    }
+
+    @keyframes gridMove{
+      from{ background-position:0 0; }
+      to{ background-position:108px 54px; }
+    }
+
+    .simulation-title{
+      position:absolute;
+      left:5%;
+      top:7%;
+      max-width:560px;
+      z-index:8;
+    }
+
+    .simulation-title small{
+      display:block;
+      color:rgba(0,245,255,0.9);
+      font-size:12px;
+      letter-spacing:2.4px;
+      font-weight:800;
+      margin-bottom:14px;
+    }
+
+    .simulation-title h1{
+      font-size:clamp(34px, 3.7vw, 70px);
+      line-height:1.05;
+      letter-spacing:-1.8px;
+      margin-bottom:18px;
+      color:#f5fbff;
+      text-shadow:0 0 28px rgba(0,245,255,0.18);
+    }
+
+    .simulation-title p{
+      color:rgba(225,235,245,0.76);
+      font-size:clamp(14px, 1vw, 18px);
+      line-height:1.7;
+      max-width:520px;
+    }
+
+    .gesture-hand-scan{
+      position:absolute;
+      left:36.6%;
+      top:30.7%;
+      width:148px;
+      height:148px;
+      border-radius:50%;
+      border:1px solid rgba(0,245,255,0.48);
+      box-shadow:0 0 30px rgba(0,245,255,0.24), inset 0 0 28px rgba(0,245,255,0.14);
+      z-index:7;
+      animation:handScan 5s ease-in-out infinite;
+      pointer-events:none;
+    }
+
+    .gesture-hand-scan::before,
+    .gesture-hand-scan::after{
+      content:"";
+      position:absolute;
+      inset:14px;
+      border-radius:50%;
+      border:1px dashed rgba(0,245,255,0.35);
+    }
+
+    .gesture-hand-scan::after{ inset:30px; animation:rotateScan 3s linear infinite; }
+    @keyframes rotateScan{ to{ transform:rotate(360deg); } }
+    @keyframes handScan{
+      0%,100%{ opacity:.45; transform:scale(.92); }
+      15%, 31%, 47%, 64%, 81%{ opacity:1; transform:scale(1.08); }
+    }
+
+    .animated-drone{
+      position:absolute;
+      right:22.2%;
+      top:21.8%;
+      width:92px;
+      height:92px;
+      z-index:7;
+      animation:droneMission 15s ease-in-out infinite;
+      pointer-events:none;
+    }
+
+    .drone-body{
+      position:absolute;
+      left:10px;
+      top:20px;
+      width:72px;
+      height:38px;
+      border-radius:18px;
+      background:linear-gradient(135deg, rgba(0,245,255,0.92), rgba(108,59,255,0.45));
+      filter:blur(11px);
+      opacity:.62;
+    }
+
+    .drone-light{
+      position:absolute;
+      left:50%;
+      top:48%;
+      width:11px;
+      height:11px;
+      border-radius:50%;
+      background:#00f5ff;
+      box-shadow:0 0 32px rgba(0,245,255,1);
+    }
+
+    @keyframes droneMission{
+      0%,8%{ transform:translate(0,0) scale(.82); opacity:.48; }
+      12%,30%{ transform:translate(66px,76px) scale(1); opacity:1; }
+      38%,58%{ transform:translate(-122px,122px) scale(.95); opacity:1; }
+      68%,88%{ transform:translate(22px,42px) scale(.88); opacity:1; }
+      100%{ transform:translate(0,0) scale(.82); opacity:.48; }
+    }
+
+    .route-line{
+      position:absolute;
+      right:20.8%;
+      top:43.7%;
+      width:330px;
+      height:198px;
+      border-radius:50%;
+      border:2px dashed rgba(0,245,255,0.32);
+      z-index:6;
+      opacity:0;
+      animation:routeActivate 15s ease-in-out infinite;
+      pointer-events:none;
+    }
+
+    @keyframes routeActivate{
+      0%,10%{ opacity:0; transform:scale(.8) rotate(0deg); }
+      14%,34%{ opacity:1; transform:scale(1) rotate(22deg); }
+      38%,100%{ opacity:.16; }
+    }
+
+    .command-panels{
+      position:absolute;
+      left:50%;
+      bottom:6.3%;
+      transform:translateX(-50%);
+      width:min(990px, 88%);
+      display:grid;
+      grid-template-columns:repeat(3, 1fr);
+      gap:24px;
+      z-index:9;
+    }
+
+    .sim-command-card{
+      min-height:170px;
+      padding:22px 20px;
+      border-radius:24px;
+      border:1px solid rgba(0,245,255,0.22);
+      background:rgba(3,8,18,0.60);
+      backdrop-filter:blur(15px);
+      text-align:center;
+      opacity:.47;
+      transform:translateY(12px) scale(.96);
+      box-shadow:0 20px 60px rgba(0,0,0,.34), inset 0 1px 0 rgba(255,255,255,.06);
+    }
+
+    .sim-command-card small{
+      color:rgba(0,245,255,.74);
+      font-size:10px;
+      letter-spacing:1.8px;
+      font-weight:800;
+    }
+
+    .sim-command-card strong{
+      display:block;
+      color:#f5fbff;
+      font-size:clamp(18px, 1.5vw, 26px);
+      margin-top:12px;
+    }
+
+    .sim-command-card span{
+      display:block;
+      color:#00f5ff;
+      font-size:14px;
+      letter-spacing:1.4px;
+      margin-top:4px;
+    }
+
+    .sim-command-card p{
+      color:rgba(225,235,245,.68);
+      font-size:12px;
+      line-height:1.55;
+      margin-top:14px;
+    }
+
+    .command-patrol{ animation:patrolCard 15s ease-in-out infinite; }
+    .command-follow{ animation:followCard 15s ease-in-out infinite; }
+    .command-stay{ animation:stayCard 15s ease-in-out infinite; }
+
+    @keyframes patrolCard{
+      0%,9%,35%,100%{ opacity:.47; transform:translateY(12px) scale(.96); }
+      12%,31%{ opacity:1; transform:translateY(0) scale(1.06); border-color:rgba(245,166,35,.85); box-shadow:0 0 42px rgba(245,166,35,.24); }
+    }
+    @keyframes followCard{
+      0%,36%,62%,100%{ opacity:.47; transform:translateY(12px) scale(.96); }
+      39%,58%{ opacity:1; transform:translateY(0) scale(1.06); border-color:rgba(84,214,106,.85); box-shadow:0 0 42px rgba(84,214,106,.24); }
+    }
+    @keyframes stayCard{
+      0%,64%,92%,100%{ opacity:.47; transform:translateY(12px) scale(.96); }
+      68%,88%{ opacity:1; transform:translateY(0) scale(1.06); border-color:rgba(255,77,77,.85); box-shadow:0 0 42px rgba(255,77,77,.24); }
+    }
+
+    .simulation-status{
+      position:absolute;
+      right:5%;
+      top:7%;
+      z-index:9;
+      padding:12px 18px;
+      border-radius:999px;
+      background:rgba(3,8,18,.58);
+      border:1px solid rgba(0,245,255,.22);
+      backdrop-filter:blur(12px);
+      color:rgba(225,235,245,.74);
+      font-size:13px;
+    }
+
+    .simulation-status strong{ color:#00f5ff; margin-left:8px; }
+
+    .simulation-replay{
+      position:absolute;
+      right:5%;
+      bottom:4.5%;
+      z-index:10;
+      border:1px solid rgba(0,245,255,.28);
+      background:rgba(3,8,18,.58);
+      color:#f5fbff;
+      padding:12px 18px;
+      border-radius:999px;
+      cursor:pointer;
+      backdrop-filter:blur(12px);
+      transition:.3s ease;
+      font-weight:700;
+    }
+    .simulation-replay:hover{ color:#00f5ff; box-shadow:0 0 24px rgba(0,245,255,.18); }
+
+    .simulation-note{
+      width:min(1180px, 92%);
+      margin:34px auto 0;
+      text-align:center;
+      color:rgba(225,235,245,.62);
+      font-size:15px;
+      line-height:1.8;
+      position:relative;
+      z-index:5;
+    }
+
+    footer{
+      text-align:center;
+      padding:40px;
+      border-top:1px solid rgba(0,245,255,0.12);
+      color:var(--muted);
+      position:relative;
+      z-index:2;
+    }
+
+    @media(max-width:1000px){
+      header{ padding:18px 24px; }
+      .simulation-stage{ aspect-ratio:auto; min-height:820px; }
+      .command-panels{ grid-template-columns:1fr; bottom:72px; }
+      .simulation-title{ max-width:82%; }
+      .simulation-replay{ bottom:22px; }
+    }
+
+    @media(max-width:700px){
+      nav{ display:none; }
+      .simulation-video-section{ padding:96px 18px 60px; }
+      .simulation-stage{ border-radius:26px; min-height:900px; }
+      .simulation-title{ left:7%; top:5%; }
+      .simulation-status{ display:none; }
+      .gesture-hand-scan{ transform:scale(.72); }
+    }
+  
+
+/* COMMAND VIDEO SHOWCASE */
+.simulation-video-showcase{
+  position: relative;
+  z-index: 5;
+  padding: 96px 34px 130px;
+}
+
+.video-showcase-header{
+  width: min(1180px, 94%);
+  margin: 0 auto 40px;
+  text-align: center;
+}
+
+.video-showcase-header small{
+  display: block;
+  color: rgba(0,245,255,0.86);
+  font-size: 12px;
+  letter-spacing: 2.6px;
+  font-weight: 800;
+  margin-bottom: 14px;
+}
+
+.video-showcase-header h2{
+  color: #f5fbff;
+  font-size: clamp(34px, 4.2vw, 68px);
+  line-height: 1.08;
+  letter-spacing: -1.6px;
+  margin-bottom: 20px;
+}
+
+.video-showcase-header p{
+  max-width: 920px;
+  margin: 0 auto;
+  color: rgba(225,235,245,0.72);
+  font-size: clamp(16px, 1.2vw, 21px);
+  line-height: 1.85;
+}
+
+.video-player-shell{
+  width: min(1380px, 96%);
+  margin: 0 auto;
+  position: relative;
+  border-radius: 36px;
+  padding: 12px;
+  border: 1px solid rgba(0,245,255,0.24);
+  background:
+    radial-gradient(circle at 18% 18%, rgba(0,245,255,0.12), transparent 34%),
+    radial-gradient(circle at 84% 80%, rgba(108,59,255,0.16), transparent 36%),
+    rgba(4,10,22,0.72);
+  box-shadow:
+    0 50px 140px rgba(0,0,0,0.48),
+    inset 0 1px 0 rgba(255,255,255,0.07);
+  overflow: hidden;
+}
+
+.video-player-shell::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  background-image:
+    linear-gradient(rgba(0,245,255,0.035) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0,245,255,0.035) 1px, transparent 1px);
+  background-size: 46px 46px;
+  opacity: 0.32;
+  pointer-events:none;
+  z-index: 1;
+}
+
+.video-player-shell video{
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  display: block;
+  object-fit: cover;
+  border-radius: 28px;
+  background: #03040A;
+}
+
+.active-command-label{
+  position: absolute;
+  left: 34px;
+  top: 34px;
+  z-index: 4;
+  min-width: 230px;
+  padding: 18px 22px;
+  border-radius: 22px;
+  border: 1px solid rgba(0,245,255,0.24);
+  background: rgba(3,8,18,0.58);
+  backdrop-filter: blur(14px);
+  box-shadow: 0 0 34px rgba(0,245,255,0.12);
+}
+
+.active-command-label span{
+  display: block;
+  color: rgba(0,245,255,0.80);
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 2px;
+  margin-bottom: 8px;
+}
+
+.active-command-label strong{
+  display: block;
+  color: #f5fbff;
+  font-size: 24px;
+  line-height: 1.1;
+  letter-spacing: -0.4px;
+}
+
+.active-command-label em{
+  display: block;
+  margin-top: 5px;
+  color: rgba(0,245,255,0.84);
+  font-style: normal;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 1.4px;
+}
+
+.command-video-tabs{
+  width: min(1180px, 94%);
+  margin: 28px auto 0;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 18px;
+}
+
+.command-video-tab{
+  cursor: pointer;
+  border: 1px solid rgba(0,245,255,0.16);
+  background: rgba(4,10,22,0.72);
+  color: rgba(235,245,255,0.76);
+  border-radius: 22px;
+  padding: 20px 22px;
+  font-size: 16px;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  transition: 0.3s ease;
+  backdrop-filter: blur(12px);
+}
+
+.command-video-tab span{
+  width: 38px;
+  height: 38px;
+  border-radius: 14px;
+  display: grid;
+  place-items: center;
+  color: #00f5ff;
+  background: rgba(0,245,255,0.08);
+  border: 1px solid rgba(0,245,255,0.18);
+}
+
+.command-video-tab:hover,
+.command-video-tab.active{
+  color: #f5fbff;
+  border-color: rgba(0,245,255,0.42);
+  box-shadow: 0 0 34px rgba(0,245,255,0.14);
+  transform: translateY(-4px);
+}
+
+@media(max-width: 900px){
+  .command-video-tabs{
+    grid-template-columns: 1fr;
+  }
+
+  .active-command-label{
+    left: 20px;
+    top: 20px;
+    min-width: auto;
+  }
+}
+
+ .simulation-video-showcase{
+  position: relative;
+  z-index: 8;
+  padding: 110px 34px 130px;
+}
+
+.video-showcase-header{
+  width: min(1180px, 94%);
+  margin: 0 auto 40px;
+  text-align: center;
+}
+
+.video-showcase-header small{
+  display: block;
+  color: rgba(0,245,255,0.86);
+  font-size: 12px;
+  letter-spacing: 2.6px;
+  font-weight: 800;
+  margin-bottom: 14px;
+}
+
+.video-showcase-header h2{
+  color: #f5fbff;
+  font-size: clamp(34px, 4.2vw, 68px);
+  line-height: 1.08;
+  letter-spacing: -1.6px;
+  margin-bottom: 20px;
+}
+
+.video-showcase-header p{
+  max-width: 920px;
+  margin: 0 auto;
+  color: rgba(225,235,245,0.72);
+  font-size: clamp(16px, 1.2vw, 21px);
+  line-height: 1.85;
+}
+
+.video-player-shell{
+  width: min(1380px, 96%);
+  margin: 0 auto;
+  position: relative;
+  border-radius: 36px;
+  padding: 12px;
+  border: 1px solid rgba(0,245,255,0.24);
+  background:
+    radial-gradient(circle at 18% 18%, rgba(0,245,255,0.12), transparent 34%),
+    radial-gradient(circle at 84% 80%, rgba(108,59,255,0.16), transparent 36%),
+    rgba(4,10,22,0.72);
+  box-shadow:
+    0 50px 140px rgba(0,0,0,0.48),
+    inset 0 1px 0 rgba(255,255,255,0.07);
+  overflow: hidden;
+}
+
+.video-player-shell video{
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  display: block;
+  object-fit: cover;
+  border-radius: 28px;
+  background: #03040A;
+}
+
+.active-command-label{
+  position: absolute;
+  left: 34px;
+  top: 34px;
+  z-index: 4;
+  min-width: 230px;
+  padding: 18px 22px;
+  border-radius: 22px;
+  border: 1px solid rgba(0,245,255,0.24);
+  background: rgba(3,8,18,0.58);
+  backdrop-filter: blur(14px);
+  box-shadow: 0 0 34px rgba(0,245,255,0.12);
+}
+
+.active-command-label span{
+  display: block;
+  color: rgba(0,245,255,0.80);
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 2px;
+  margin-bottom: 8px;
+}
+
+.active-command-label strong{
+  display: block;
+  color: #f5fbff;
+  font-size: 24px;
+  line-height: 1.1;
+}
+
+.active-command-label em{
+  display: block;
+  margin-top: 5px;
+  color: rgba(0,245,255,0.84);
+  font-style: normal;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 1.4px;
+}
+
+.command-video-tabs{
+  width: min(1180px, 94%);
+  margin: 28px auto 0;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 18px;
+}
+
+.command-video-tab{
+  cursor: pointer;
+  border: 1px solid rgba(0,245,255,0.16);
+  background: rgba(4,10,22,0.72);
+  color: rgba(235,245,255,0.76);
+  border-radius: 22px;
+  padding: 20px 22px;
+  font-size: 16px;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  transition: 0.3s ease;
+  backdrop-filter: blur(12px);
+}
+
+.command-video-tab span{
+  width: 38px;
+  height: 38px;
+  border-radius: 14px;
+  display: grid;
+  place-items: center;
+  color: #00f5ff;
+  background: rgba(0,245,255,0.08);
+  border: 1px solid rgba(0,245,255,0.18);
+}
+
+.command-video-tab:hover,
+.command-video-tab.active{
+  color: #f5fbff;
+  border-color: rgba(0,245,255,0.42);
+  box-shadow: 0 0 34px rgba(0,245,255,0.14);
+  transform: translateY(-4px);
+}
+
+@media(max-width: 900px){
+  .command-video-tabs{
+    grid-template-columns: 1fr;
+  }
+
+  .active-command-label{
+    left: 20px;
+    top: 20px;
+    min-width: auto;
+  }
+}
+ .dream-drone-section {
+  width: min(1400px, calc(100% - 64px));
+  margin: 48px auto 80px;
+  position: relative;
+  z-index: 2;
+}
+
+.dream-drone-box {
+  display: grid;
+  grid-template-columns: 1.1fr 0.9fr;
+  gap: 32px;
+  align-items: center;
+  padding: 36px;
+  border-radius: 28px;
+  border: 1px solid rgba(0, 255, 255, 0.14);
+  background:
+    linear-gradient(135deg, rgba(0, 18, 36, 0.88), rgba(2, 9, 22, 0.92)),
+    radial-gradient(circle at top left, rgba(0,255,255,0.10), transparent 35%);
+  box-shadow:
+    0 0 0 1px rgba(0,255,255,0.04) inset,
+    0 20px 60px rgba(0,0,0,0.35);
+  backdrop-filter: blur(10px);
+}
+
+.dream-drone-text small {
+  display: inline-block;
+  margin-bottom: 12px;
+  font-size: 13px;
+  letter-spacing: 2px;
+  font-weight: 700;
+  color: #22e7ff;
+}
+
+.dream-drone-text h2 {
+  margin: 0 0 16px;
+  font-size: clamp(34px, 4vw, 54px);
+  line-height: 1.05;
+  color: #f3fbff;
+}
+
+.dream-drone-text p {
+  margin: 0 0 24px;
+  font-size: 18px;
+  line-height: 1.8;
+  color: rgba(225, 240, 255, 0.82);
+  max-width: 760px;
+}
+
+.dream-drone-features {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(220px, 1fr));
+  gap: 14px;
+}
+
+.feature-card {
+  padding: 16px 18px;
+  border-radius: 18px;
+  border: 1px solid rgba(0,255,255,0.12);
+  background: rgba(4, 16, 34, 0.72);
+  box-shadow: inset 0 0 20px rgba(0,255,255,0.03);
+}
+
+.feature-card strong {
+  display: block;
+  margin-bottom: 8px;
+  font-size: 16px;
+  color: #ffffff;
+}
+
+.feature-card span {
+  display: block;
+  font-size: 14px;
+  line-height: 1.6;
+  color: rgba(220, 235, 255, 0.72);
+}
+
+.dream-drone-visual {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.drone-visual-frame {
+  width: 100%;
+  max-width: 540px;
+  min-height: 420px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  border-radius: 24px;
+  border: 1px solid rgba(0,255,255,0.14);
+  background:
+    radial-gradient(circle at center, rgba(0,255,255,0.12), transparent 55%),
+    rgba(3, 10, 24, 0.7);
+  box-shadow:
+    inset 0 0 30px rgba(0,255,255,0.04),
+    0 10px 40px rgba(0,0,0,0.25);
+}
+
+.drone-visual-frame img {
+  max-width: 100%;
+  max-height: 380px;
+  object-fit: contain;
+  display: block;
+  filter: drop-shadow(0 10px 28px rgba(0, 255, 255, 0.12));
+  transition: transform 0.35s ease, filter 0.35s ease;
+}
+
+.drone-visual-frame:hover img {
+  transform: scale(1.03);
+  filter: drop-shadow(0 16px 34px rgba(0, 255, 255, 0.18));
+}
+
+@media (max-width: 1100px) {
+  .dream-drone-box {
+    grid-template-columns: 1fr;
+  }
+
+  .dream-drone-features {
+    grid-template-columns: 1fr;
+  }
+
+  .dream-drone-visual {
+    order: -1;
+  }
+}
+
+@media (max-width: 768px) {
+  .dream-drone-section {
+    width: min(100% - 24px, 1400px);
+    margin: 36px auto 60px;
+  }
+
+  .dream-drone-box {
+    padding: 22px;
+    gap: 22px;
+  }
+
+  .dream-drone-text p {
+    font-size: 16px;
+    line-height: 1.7;
+  }
+
+  .drone-visual-frame {
+    min-height: 300px;
+  }
+
+  .drone-visual-frame img {
+    max-height: 260px;
+  }
+}
+ .simulation-go-btn{
+  margin: 22px auto 34px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  padding: 16px 30px;
+  border-radius: 999px;
+  text-decoration: none;
+  color: #001217;
+  font-size: 15px;
+  font-weight: 900;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  background: linear-gradient(90deg, #00f5ff, #7dfff7 45%, #6c7cff);
+  box-shadow:
+    0 0 24px rgba(0,245,255,0.28),
+    0 0 70px rgba(108,124,255,0.16);
+  position: relative;
+  overflow: hidden;
+  transition: 0.35s ease;
+}
+
+.simulation-go-btn::before{
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -120%;
+  width: 80%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255,255,255,0.55),
+    transparent
+  );
+  transform: skewX(-18deg);
+  transition: 0.65s ease;
+}
+
+.simulation-go-btn:hover::before{
+  left: 130%;
+}
+
+.simulation-go-btn:hover{
+  transform: translateY(-4px) scale(1.03);
+  box-shadow:
+    0 0 34px rgba(0,245,255,0.42),
+    0 0 90px rgba(108,124,255,0.22);
+}
+
+.simulation-go-btn i{
+  font-style: normal;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  color: #eaffff;
+  background: rgba(0, 10, 18, 0.32);
+  box-shadow: inset 0 0 14px rgba(255,255,255,0.12);
+  transition: 0.35s ease;
+}
+
+.simulation-go-btn:hover i{
+  transform: translate(3px, 3px);
+}
+  </style>
+</head>
+<body>
+  <div class="cursor"></div>
+  <div class="mouse-glow"></div>
+
+  <header>
+    <div class="logo">VISION TECHNOLOGIES</div>
+    <nav>
+      <a href="index.html">Ana Sayfa</a>
+      <a href="otonom-araclar.html">Otonom Araçlar</a>
+      <a href="proje.html">Proje</a>
+      <a class="active" href="simulasyon.html">Simülasyon</a>
+    </nav>
+  </header>
+
+  <section class="simulation-video-section">
+    <div class="simulation-stage" id="simulationStage">
+      <img class="simulation-bg" src="simulation-hero.png" alt="Gesture based drone control simulation">
+      <div class="simulation-overlay"></div>
+      <div class="simulation-grid"></div>
+
+      <div class="simulation-title">
+        <small>GESTURE BASED AUTONOMOUS CONTROL</small>
+        <h1>Drone Kontrol Simülasyonu</h1>
+        <p>El hareketleriyle verilen komutlar, otonom drone davranışına dönüştürülür.</p>
+      </div>
+
+      <div class="gesture-hand-scan"></div>
+      <div class="animated-drone">
+        <div class="drone-body"></div>
+        <span class="drone-light"></span>
+      </div>
+      <div class="route-line"></div>
+
+      <div class="command-panels">
+        <div class="sim-command-card command-patrol">
+          <small>KOMUT 01</small>
+          <strong>DEVRİYE AT</strong>
+          <span>PATROL</span>
+          <p>Belirlenen rotada otonom devriye başlatılır.</p>
+        </div>
+        <div class="sim-command-card command-follow">
+          <small>KOMUT 02</small>
+          <strong>BENİ TAKİP ET</strong>
+          <span>FOLLOW ME</span>
+          <p>Drone operatörü takip eder ve mesafesini korur.</p>
+        </div>
+        <div class="sim-command-card command-stay">
+          <small>KOMUT 03</small>
+          <strong>DUR - BEKLE</strong>
+          <span>STAY / WAIT</span>
+          <p>Mevcut pozisyonda bekler veya sabitlenir.</p>
+        </div>
+      </div>
+
+      <div class="simulation-status">
+        <span>SİSTEM DURUMU:</span>
+        <strong id="simStatusText">HAZIR</strong>
+      </div>
+
+      <button class="simulation-replay" type="button" onclick="restartSimulation()">
+        Simülasyonu Tekrar Oynat
+      </button>
+    </div>
+  </section>
+  <section id="simulasyon-akisi" class="simulation-video-showcase">
+ <div class="video-showcase-header">
+  <small>GESTURE COMMAND SIMULATION</small>
+
+  <a href="#simulasyon-akisi" class="simulation-go-btn">
+    <span>Simülasyona Git</span>
+    <i>↘</i>
+  </a>
+
+  <h2>El Hareketleriyle Drone Kontrol Akışı</h2>
+  <p>
+    Askerin verdiği taktiksel el komutları, yapay zekâ destekli sistem tarafından algılanır
+    ve drone davranışına gerçek zamanlı olarak dönüştürülür.
+  </p>
+</div>
+
+  <div class="video-player-shell">
+    <div class="active-command-label">
+      <span id="activeCommandNumber">KOMUT 01</span>
+      <strong id="activeCommandTitle">DEVRİYE AT</strong>
+      <em id="activeCommandSubtitle">PATROL</em>
+    </div>
+
+    <video
+      id="simulationCommandVideo"
+      src="devriye-at.mp4"
+      autoplay
+      muted
+      playsinline
+      controls
+    ></video>
+  </div>
+
+  <div class="command-video-tabs">
+    <button class="command-video-tab active" type="button" data-video="devriye-at.mp4" data-number="KOMUT 01" data-title="DEVRİYE AT" data-subtitle="PATROL">
+      <span>01</span>
+      Devriye At
+    </button>
+
+    <button class="command-video-tab" type="button" data-video="dur-bekle.mp4" data-number="KOMUT 02" data-title="DUR - BEKLE" data-subtitle="STAY / WAIT">
+      <span>02</span>
+      Dur - Bekle
+    </button>
+
+    <button class="command-video-tab" type="button" data-video="beni-takip-et.mp4" data-number="KOMUT 03" data-title="BENİ TAKİP ET" data-subtitle="FOLLOW ME">
+      <span>03</span>
+      Beni Takip Et
+    </button>
+  </div>
+</section>
+  <section class="dream-drone-section">
+  <div class="dream-drone-box">
+    <div class="dream-drone-text">
+      <small>KONSEPT PLATFORM</small>
+      <h2>Hayalimdeki Drone</h2>
+      <p>
+        Bu konsept drone; savunma teknolojileri, otonom görev icrası ve el hareketleriyle
+        kontrol senaryoları için tasarlanan ileri düzey bir platform vizyonunu temsil eder.
+        Yüksek manevra kabiliyeti, gelişmiş görüntüleme altyapısı ve gerçek zamanlı görev
+        desteğiyle; keşif, takip, devriye ve taktik operasyonlarda etkin kullanım hedeflenmiştir.
+      </p>
+
+      <div class="dream-drone-features">
+        <div class="feature-card">
+          <strong>Otonom Görev Desteği</strong>
+          <span>Takip, devriye ve sabit bekleme komutlarına uyumlu yapı.</span>
+        </div>
+
+        <div class="feature-card">
+          <strong>Gelişmiş Görüntüleme</strong>
+          <span>Keşif ve çevresel analiz için yüksek hassasiyetli kamera sistemi.</span>
+        </div>
+
+        <div class="feature-card">
+          <strong>Taktik Kullanım</strong>
+          <span>Gece operasyonları ve savunma odaklı görev senaryolarına uygun tasarım.</span>
+        </div>
+
+        <div class="feature-card">
+          <strong>Gerçek Zamanlı Kontrol</strong>
+          <span>El hareketi tabanlı komutlarla hızlı ve sezgisel yönetim.</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="dream-drone-visual">
+      <div class="drone-visual-frame">
+        <img src="drone.png" alt="Hayalimdeki Drone">
+      </div>
+    </div>
+  </div>
+</section>
+
+  <footer>© 2026 YAĞMUR SÖNMEZ (BİLGİSAYAR MÜHENDİSİ) • Vision Technologies</footer>
+
+  <script>
+    /* PREMIUM MOUSE EFFECT */
+    const cursor = document.querySelector(".cursor");
+    const mouseGlow = document.querySelector(".mouse-glow");
+    let mouseX = window.innerWidth / 2;
+    let mouseY = window.innerHeight / 2;
+    let glowX = mouseX;
+    let glowY = mouseY;
+
+    document.addEventListener("mousemove", (e) => {
+      mouseX = e.clientX;
+      mouseY = e.clientY;
+      if (cursor) { cursor.style.top = mouseY + "px"; cursor.style.left = mouseX + "px"; }
+      createMouseTrail(mouseX, mouseY);
+    });
+
+    function createMouseTrail(x, y){
+      const trail = document.createElement("span");
+      trail.className = "cursor-trail";
+      trail.style.left = x + "px";
+      trail.style.top = y + "px";
+      document.body.appendChild(trail);
+      requestAnimationFrame(() => {
+        trail.style.transition = "0.7s ease";
+        trail.style.opacity = "0.65";
+        trail.style.transform = `translate(-50%, -50%) scale(${1.8 + Math.random() * 1.4})`;
+      });
+      setTimeout(() => { trail.style.opacity = "0"; trail.style.transform = "translate(-50%, -50%) scale(0.2)"; }, 120);
+      setTimeout(() => { trail.remove(); }, 760);
+    }
+
+    function animateMouseGlow(){
+      glowX += (mouseX - glowX) * 0.08;
+      glowY += (mouseY - glowY) * 0.08;
+      if(mouseGlow){ mouseGlow.style.left = glowX + "px"; mouseGlow.style.top = glowY + "px"; }
+      requestAnimationFrame(animateMouseGlow);
+    }
+    animateMouseGlow();
+
+    /* FLU CODE FLOW BACKGROUND */
+    const codeCanvas = document.createElement("canvas");
+    const codeCtx = codeCanvas.getContext("2d");
+    codeCanvas.style.position = "fixed";
+    codeCanvas.style.top = "0";
+    codeCanvas.style.left = "0";
+    codeCanvas.style.width = "100%";
+    codeCanvas.style.height = "100%";
+    codeCanvas.style.zIndex = "-5";
+    codeCanvas.style.pointerEvents = "none";
+    codeCanvas.style.opacity = "0.25";
+    codeCanvas.style.filter = "blur(0.7px)";
+    document.body.appendChild(codeCanvas);
+
+    function resizeCodeCanvas(){
+      codeCanvas.width = window.innerWidth;
+      codeCanvas.height = window.innerHeight;
+    }
+    resizeCodeCanvas();
+
+    const codeWords = ["AI", "VISION", "DRONE", "SYSTEM", "TRACK", "DATA", "SCAN", "CORE", "UAV", "SIGNAL", "TARGET", "VECTOR", "0101", "1100", "AUTH", "NODE", "SYNC", "MODEL"];
+    const codeStreams = Array.from({ length: 62 }, () => ({
+      x: Math.random() * window.innerWidth,
+      y: Math.random() * window.innerHeight,
+      speed: 0.35 + Math.random() * 0.85,
+      size: 10 + Math.random() * 8,
+      alpha: 0.08 + Math.random() * 0.22,
+      word: codeWords[Math.floor(Math.random() * codeWords.length)]
+    }));
+
+    function drawCodeFlow(){
+      codeCtx.clearRect(0, 0, codeCanvas.width, codeCanvas.height);
+      codeCtx.fillStyle = "rgba(3, 4, 10, 0.12)";
+      codeCtx.fillRect(0, 0, codeCanvas.width, codeCanvas.height);
+      codeStreams.forEach((stream, index) => {
+        codeCtx.font = `${stream.size}px monospace`;
+        codeCtx.fillStyle = `rgba(0, 245, 255, ${stream.alpha})`;
+        const repeatCount = 4 + Math.floor(Math.random() * 3);
+        for(let i = 0; i < repeatCount; i++){
+          const text = codeWords[(index + i) % codeWords.length];
+          codeCtx.fillText(text, stream.x, stream.y - i * stream.size * 1.8);
+        }
+        stream.y += stream.speed;
+        stream.x += Math.sin(stream.y * 0.006) * 0.18;
+        if(stream.y > codeCanvas.height + 120){
+          stream.y = -80;
+          stream.x = Math.random() * codeCanvas.width;
+          stream.word = codeWords[Math.floor(Math.random() * codeWords.length)];
+        }
+      });
+      requestAnimationFrame(drawCodeFlow);
+    }
+    drawCodeFlow();
+    window.addEventListener("resize", resizeCodeCanvas);
+
+    /* SIMULATION STATUS LOOP */
+    const statusText = document.getElementById("simStatusText");
+    const statusSteps = [
+      { time: 0, text: "HAZIR" },
+      { time: 1700, text: "DEVRİYE AT" },
+      { time: 5600, text: "BENİ TAKİP ET" },
+      { time: 9900, text: "DUR - BEKLE" },
+      { time: 13500, text: "DÖNGÜ YENİLENİYOR" }
+    ];
+    let statusTimers = [];
+
+    function runStatusLoop(){
+      statusTimers.forEach(clearTimeout);
+      statusTimers = [];
+      statusSteps.forEach((step) => {
+        statusTimers.push(setTimeout(() => {
+          if(statusText) statusText.textContent = step.text;
+        }, step.time));
+      });
+    }
+    runStatusLoop();
+    setInterval(runStatusLoop, 15000);
+
+    function restartSimulation(){
+      const stage = document.getElementById("simulationStage");
+      if(!stage) return;
+      const animatedItems = stage.querySelectorAll(".simulation-bg, .simulation-grid, .gesture-hand-scan, .animated-drone, .route-line, .command-patrol, .command-follow, .command-stay");
+      animatedItems.forEach((item) => {
+        item.style.animation = "none";
+        void item.offsetWidth;
+        item.style.animation = "";
+      });
+      runStatusLoop();
+    }
+
+    gsap.from(".simulation-stage", { y: 28, opacity: 0, duration: 1.1, ease: "power3.out" });
+    gsap.from(".simulation-title", { y: 20, opacity: 0, duration: 1, delay: 0.25, ease: "power3.out" });
+    const commandVideo = document.getElementById("simulationCommandVideo");
+const commandTabs = document.querySelectorAll(".command-video-tab");
+const activeCommandNumber = document.getElementById("activeCommandNumber");
+const activeCommandTitle = document.getElementById("activeCommandTitle");
+const activeCommandSubtitle = document.getElementById("activeCommandSubtitle");
+
+let currentCommandIndex = 0;
+
+function playCommandVideo(index){
+  const tab = commandTabs[index];
+  if(!tab || !commandVideo) return;
+
+  commandTabs.forEach((item) => item.classList.remove("active"));
+  tab.classList.add("active");
+
+  commandVideo.src = tab.dataset.video;
+  commandVideo.currentTime = 0;
+  commandVideo.play();
+
+  if(activeCommandNumber) activeCommandNumber.textContent = tab.dataset.number;
+  if(activeCommandTitle) activeCommandTitle.textContent = tab.dataset.title;
+  if(activeCommandSubtitle) activeCommandSubtitle.textContent = tab.dataset.subtitle;
+
+  currentCommandIndex = index;
+}
+
+commandTabs.forEach((tab, index) => {
+  tab.addEventListener("click", () => {
+    playCommandVideo(index);
+  });
+});
+
+if(commandVideo){
+  commandVideo.addEventListener("ended", () => {
+    const nextIndex = (currentCommandIndex + 1) % commandTabs.length;
+    playCommandVideo(nextIndex);
+  });
+}
+  </script>
+</body>
+</html>

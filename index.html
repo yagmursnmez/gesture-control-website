@@ -1,0 +1,1709 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Vision Technologies</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700;800&display=swap" rel="stylesheet">
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+
+  <style>
+    .hero-content{
+  position: relative;
+  z-index: 10;
+  width: min(1280px, 94%);
+  margin: 0 auto;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  /* Drone’un önü kapanmasın diye yazı bloğunu biraz aşağı aldık */
+  transform: translateY(215px);
+}
+
+.hero-badge{
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 22px;
+  margin-bottom: 24px;
+  border: 1px solid rgba(0, 245, 255, 0.24);
+  border-radius: 999px;
+  background: rgba(7, 15, 28, 0.50);
+  backdrop-filter: blur(12px);
+  color: rgba(235, 245, 255, 0.90);
+  font-size: clamp(9px, 0.8vw, 12px);
+  font-weight: 600;
+  letter-spacing: 1.8px;
+  text-transform: uppercase;
+  box-shadow: 0 0 30px rgba(0, 245, 255, 0.08);
+  max-width: 94%;
+}
+
+#title{
+  margin: 0;
+  max-width: 1180px;
+  line-height: 1.05;
+  font-weight: 800;
+  letter-spacing: -2px;
+
+  /* Önceki gibi dev değil, drone’u kapatmayacak premium ölçü */
+  font-size: clamp(30px, 4.25vw, 64px);
+  background: linear-gradient(
+    90deg,
+    #f5fbff 0%,
+    #bdfbff 26%,
+    #22e7ff 58%,
+    #4fb6ff 78%,
+    #8a7dff 100%
+  );
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+
+  text-transform: uppercase;
+  text-align: center;
+
+  /* Okunurluk için hafif gölge, ama drone’u öldürmez */
+  filter: drop-shadow(0 0 22px rgba(0, 245, 255, 0.10));
+}
+  .typing-title{
+  min-height: 225px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+
+  font-size: clamp(32px, 4.7vw, 72px);
+  line-height: 1.08;
+  font-weight: 800;
+  letter-spacing: -1.4px;
+  text-transform: uppercase;
+
+  background: linear-gradient(
+    90deg,
+    #ffffff 0%,
+    #b9ffff 18%,
+    #00f5ff 38%,
+    #28bfff 58%,
+    #6c7cff 78%,
+    #ffffff 100%
+  );
+  background-size: 220% 100%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+
+  animation: titleGradientMove 4.8s ease-in-out infinite;
+  filter:
+    drop-shadow(0 0 12px rgba(0,245,255,0.18))
+    drop-shadow(0 0 32px rgba(108,59,255,0.10));
+}
+
+.typing-title::after{
+  content: "";
+  display: inline-block;
+  width: 4px;
+  height: 0.82em;
+  margin-left: 8px;
+  background: #00f5ff;
+  box-shadow: 0 0 18px rgba(0,245,255,0.9);
+  animation: cursorBlink 0.8s infinite;
+  vertical-align: middle;
+}
+
+@keyframes titleGradientMove{
+  0%{
+    background-position: 0% 50%;
+  }
+  50%{
+    background-position: 100% 50%;
+  }
+  100%{
+    background-position: 0% 50%;
+  }
+}
+
+@keyframes cursorBlink{
+  0%, 45%{
+    opacity: 1;
+  }
+  46%, 100%{
+    opacity: 0;
+  }
+}
+
+.hero-marquee{
+  width: 100%;
+  max-width: 1120px;
+  overflow: hidden;
+  margin-top: 22px;
+  padding: 8px 0;
+  position: relative;
+  opacity: 0.92;
+}
+
+.hero-marquee::before,
+.hero-marquee::after{
+  content:"";
+  position:absolute;
+  top:0;
+  width:120px;
+  height:100%;
+  z-index:2;
+  pointer-events:none;
+}
+
+.hero-marquee::before{
+  left:0;
+  background:linear-gradient(90deg, rgba(3,4,10,0.95), transparent);
+}
+
+.hero-marquee::after{
+  right:0;
+  background:linear-gradient(270deg, rgba(3,4,10,0.95), transparent);
+}
+
+.hero-marquee-track{
+  display: flex;
+  width: max-content;
+  white-space: nowrap;
+  animation: heroMarquee 24s linear infinite;
+}
+
+.hero-marquee-track span{
+  display: inline-block;
+  padding-right: 70px;
+  color: rgba(210, 220, 230, 0.54);
+  font-size: clamp(14px, 1.35vw, 19px);
+  font-weight: 500;
+  letter-spacing: 0.3px;
+}
+
+@keyframes heroMarquee{
+  0%{
+    transform: translateX(0);
+  }
+  100%{
+    transform: translateX(-50%);
+  }
+}
+
+.hero-marquee-track{
+  display: flex;
+  width: max-content;
+  white-space: nowrap;
+  animation: heroMarquee 22s linear infinite;
+}
+
+.hero-marquee-track span{
+  display: inline-block;
+  padding-right: 70px;
+  color: rgba(210, 220, 230, 0.50);
+  font-size: clamp(18px, 2vw, 26px);
+  font-weight: 500;
+  letter-spacing: 0.4px;
+}
+
+@keyframes heroMarquee{
+  0%{
+    transform: translateX(0);
+  }
+  100%{
+    transform: translateX(-50%);
+  }
+}
+    :root{
+      --bg:#03040A;
+      --bg2:#071A2F;
+      --cyan:#00F5FF;
+      --blue:#007BFF;
+      --purple:#6C3BFF;
+      --white:#F5F7FA;
+      --muted:#8A94A6;
+      --line:rgba(255,255,255,0.08);
+      --panel:rgba(7,26,47,0.28);
+      --glow:rgba(0,245,255,0.35);
+    }
+
+    *{
+      margin:0;
+      padding:0;
+      box-sizing:border-box;
+      font-family:'Poppins',sans-serif;
+    }
+
+    html{
+      scroll-behavior:smooth;
+    }
+
+    body{
+      background:
+        radial-gradient(circle at 20% 20%, rgba(0,245,255,0.08), transparent 25%),
+        radial-gradient(circle at 80% 15%, rgba(108,59,255,0.10), transparent 25%),
+        linear-gradient(180deg, #03040A 0%, #050915 45%, #03040A 100%);
+      color:var(--white);
+      overflow-x:hidden;
+    }
+
+    body::before{
+      content:"";
+      position:fixed;
+      inset:0;
+      background-image:
+        linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
+      background-size:80px 80px;
+      pointer-events:none;
+      z-index:-3;
+      mask-image:linear-gradient(to bottom, rgba(0,0,0,0.9), transparent 90%);
+    }
+
+    /* CANVAS */
+    canvas{
+      position:fixed;
+      top:0;
+      left:0;
+      z-index:-2;
+    }
+
+    /* CURSOR */
+    .cursor{
+  width: 18px;
+  height: 18px;
+  border: 2px solid var(--cyan);
+  box-shadow:
+    0 0 16px rgba(0,245,255,0.65),
+    0 0 34px rgba(108,59,255,0.28);
+  border-radius: 50%;
+  position: fixed;
+  pointer-events: none;
+  transform: translate(-50%, -50%);
+  z-index: 9999;
+  mix-blend-mode: screen;
+}
+
+    /* HEADER */
+    header{
+      position:fixed;
+      width:100%;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      padding:20px 60px;
+      backdrop-filter:blur(12px);
+      background:linear-gradient(to bottom, rgba(3,4,10,0.82), rgba(3,4,10,0.28));
+      border-bottom:1px solid rgba(255,255,255,0.05);
+      z-index:1000;
+    }
+
+    .logo{
+      color:var(--cyan);
+      font-weight:800;
+      letter-spacing:0.5px;
+      text-shadow:0 0 16px rgba(0,245,255,0.25);
+    }
+
+    nav a{
+      margin-left:25px;
+      color:var(--white);
+      text-decoration:none;
+      opacity:0.88;
+      position:relative;
+      transition:0.25s ease;
+    }
+
+    nav a::after{
+      content:"";
+      position:absolute;
+      left:0;
+      bottom:-6px;
+      width:0;
+      height:1px;
+      background:linear-gradient(90deg,var(--cyan),var(--purple));
+      transition:0.25s ease;
+    }
+
+    nav a:hover{
+      color:var(--cyan);
+      opacity:1;
+    }
+
+    nav a:hover::after{
+      width:100%;
+    }
+
+    /* HERO */
+    .hero{
+      height:100vh;
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      flex-direction:column;
+      text-align:center;
+      padding:0 20px;
+      position:relative;
+      z-index:2;
+    }
+
+    .hero h1{
+      font-size:90px;
+      line-height:0.95;
+      letter-spacing:-2px;
+      background:linear-gradient(90deg, #ffffff 0%, #c6ffff 35%, var(--cyan) 70%, #8f81ff 100%);
+      -webkit-background-clip:text;
+      -webkit-text-fill-color:transparent;
+      text-shadow:0 0 30px rgba(0,245,255,0.08);
+    }
+
+    .hero p{
+      opacity:0.78;
+      margin-top:20px;
+      color:var(--muted);
+      font-size:18px;
+      max-width:760px;
+    }
+
+    .hero-badge{
+      display:inline-block;
+      margin-bottom:22px;
+      padding:10px 16px;
+      border:1px solid rgba(0,245,255,0.18);
+      border-radius:999px;
+      background:rgba(7,26,47,0.28);
+      color:rgba(245,247,250,0.82);
+      font-size:12px;
+      letter-spacing:1.6px;
+      text-transform:uppercase;
+      backdrop-filter:blur(12px);
+    }
+
+    /* SECTION */
+    .section{
+      padding:120px 60px;
+      position:relative;
+      z-index:2;
+    }
+
+    .section h2{
+      text-align:center;
+      margin-bottom:50px;
+      font-size:42px;
+      color:var(--white);
+      letter-spacing:-1px;
+    }
+
+    .cards{
+      display:flex;
+      gap:25px;
+      flex-wrap:wrap;
+      justify-content:center;
+    }
+
+    .card{
+      width:260px;
+      padding:30px;
+      border:1px solid rgba(0,245,255,0.14);
+      background:var(--panel);
+      backdrop-filter:blur(10px);
+      border-radius:18px;
+      transition:0.35s ease;
+      color:var(--white);
+      box-shadow:inset 0 1px 0 rgba(255,255,255,0.04);
+    }
+
+    .card strong{
+      display:block;
+      color:var(--cyan);
+      margin-bottom:10px;
+      font-size:18px;
+    }
+
+    .card span{
+      display:block;
+      color:var(--muted);
+      font-size:14px;
+      line-height:1.7;
+    }
+
+    .card:hover{
+      transform:scale(1.06);
+      border-color:rgba(0,245,255,0.28);
+      box-shadow:0 0 40px rgba(0,245,255,0.16);
+    }
+
+    /* FOOTER */
+    footer{
+      text-align:center;
+      padding:40px;
+      border-top:1px solid rgba(0,245,255,0.12);
+      color:var(--muted);
+      position:relative;
+      z-index:2;
+    }
+
+    @media(max-width:900px){
+      .hero h1{
+        font-size:62px;
+      }
+
+      header{
+        padding:18px 24px;
+      }
+
+      .section{
+        padding:100px 24px;
+      }
+    }
+
+    @media(max-width:700px){
+      nav{
+        display:none;
+      }
+
+      .hero h1{
+        font-size:46px;
+      }
+
+      .hero p{
+        font-size:15px;
+      }
+
+      .card{
+        width:100%;
+        max-width:340px;
+      }
+    }
+ .tech-section{
+  padding-top: 130px;
+}
+
+.tech-layout{
+  max-width: 1380px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 0.9fr 1.1fr;
+  gap: 34px;
+  align-items: stretch;
+}
+
+.tech-list{
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.tech-card{
+  min-height: 132px;
+  padding: 24px 26px;
+  border-radius: 24px;
+  border: 1px solid rgba(0,245,255,0.16);
+  background: rgba(5,12,24,0.68);
+  backdrop-filter: blur(14px);
+  display: grid;
+  grid-template-columns: 58px 1fr;
+  gap: 18px;
+  align-items: flex-start;
+  transition: 0.35s ease;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.04),
+    0 20px 60px rgba(0,0,0,0.18);
+}
+
+.tech-card:hover{
+  transform: translateX(8px);
+  border-color: rgba(0,245,255,0.34);
+  box-shadow:
+    0 0 36px rgba(0,245,255,0.12),
+    inset 0 1px 0 rgba(255,255,255,0.06);
+}
+
+.tech-number{
+  width: 48px;
+  height: 48px;
+  border-radius: 16px;
+  display: grid;
+  place-items: center;
+  color: #00f5ff;
+  font-weight: 800;
+  background: rgba(0,245,255,0.08);
+  border: 1px solid rgba(0,245,255,0.18);
+  box-shadow: 0 0 24px rgba(0,245,255,0.08);
+}
+
+.tech-card strong{
+  display: block;
+  color: #00f5ff;
+  font-size: 21px;
+  margin-bottom: 9px;
+  letter-spacing: 0.2px;
+}
+
+.tech-card span{
+  display: block;
+  color: rgba(220,230,240,0.66);
+  font-size: 15px;
+  line-height: 1.7;
+}
+
+/* SIMULATION PANEL */
+.simulation-panel{
+  min-height: 610px;
+  border-radius: 32px;
+  overflow: hidden;
+  position: relative;
+  border: 1px solid rgba(0,245,255,0.18);
+  background:
+    radial-gradient(circle at 40% 35%, rgba(0,245,255,0.13), transparent 34%),
+    radial-gradient(circle at 75% 70%, rgba(108,59,255,0.16), transparent 32%),
+    rgba(4,10,22,0.74);
+  backdrop-filter: blur(18px);
+  box-shadow:
+    0 35px 100px rgba(0,0,0,0.36),
+    inset 0 1px 0 rgba(255,255,255,0.06);
+}
+
+.sim-header{
+  height: 82px;
+  padding: 22px 26px;
+  border-bottom: 1px solid rgba(255,255,255,0.07);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.sim-header small{
+  display: block;
+  color: rgba(180,195,210,0.55);
+  font-size: 11px;
+  letter-spacing: 1.6px;
+  margin-bottom: 5px;
+}
+
+.sim-header strong{
+  color: #f5fbff;
+  font-size: 17px;
+}
+
+.sim-status{
+  color: #001318;
+  background: linear-gradient(90deg, #00f5ff, #96ffff);
+  padding: 8px 13px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 1px;
+  box-shadow: 0 0 24px rgba(0,245,255,0.22);
+}
+
+.sim-screen{
+  position: relative;
+  height: 370px;
+  overflow: hidden;
+}
+
+.radar-grid{
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(0,245,255,0.055) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0,245,255,0.055) 1px, transparent 1px);
+  background-size: 38px 38px;
+  opacity: 0.75;
+}
+
+.radar-circle{
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  border-radius: 50%;
+  border: 1px solid rgba(0,245,255,0.18);
+  transform: translate(-50%, -50%);
+}
+
+.circle-one{
+  width: 220px;
+  height: 220px;
+}
+
+.circle-two{
+  width: 340px;
+  height: 340px;
+  border-color: rgba(108,59,255,0.20);
+}
+
+.radar-sweep{
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 180px;
+  height: 180px;
+  transform-origin: left top;
+  background: linear-gradient(45deg, rgba(0,245,255,0.26), transparent 55%);
+  filter: blur(0.4px);
+  animation: radarSweep 4.8s linear infinite;
+}
+
+@keyframes radarSweep{
+  0%{
+    transform: rotate(0deg);
+  }
+  100%{
+    transform: rotate(360deg);
+  }
+}
+
+.vehicle-core{
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 104px;
+  height: 104px;
+  border-radius: 28px;
+  border: 1px solid rgba(0,245,255,0.32);
+  background:
+    radial-gradient(circle at center, rgba(0,245,255,0.18), transparent 58%),
+    rgba(3,8,18,0.88);
+  display: grid;
+  place-items: center;
+  box-shadow:
+    0 0 40px rgba(0,245,255,0.18),
+    inset 0 0 30px rgba(0,245,255,0.06);
+}
+
+.vehicle-dot{
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: #00f5ff;
+  box-shadow: 0 0 28px rgba(0,245,255,0.9);
+  animation: corePulse 2s ease-in-out infinite;
+}
+
+.vehicle-core span{
+  position: absolute;
+  bottom: 15px;
+  color: rgba(235,245,255,0.7);
+  font-size: 11px;
+  letter-spacing: 1.4px;
+}
+
+@keyframes corePulse{
+  0%,100%{
+    transform: scale(1);
+    opacity: 0.9;
+  }
+  50%{
+    transform: scale(1.16);
+    opacity: 1;
+  }
+}
+
+.gesture-node{
+  position: absolute;
+  width: 76px;
+  height: 76px;
+  border-radius: 24px;
+  border: 1px solid rgba(0,245,255,0.24);
+  background: rgba(3,8,18,0.78);
+  display: grid;
+  place-items: center;
+  color: #00f5ff;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 1.2px;
+  box-shadow: 0 0 26px rgba(0,245,255,0.08);
+  animation: nodeFloat 3.6s ease-in-out infinite;
+}
+
+.node-one{
+  left: 16%;
+  top: 24%;
+}
+
+.node-two{
+  right: 17%;
+  top: 23%;
+  animation-delay: 0.4s;
+}
+
+.node-three{
+  left: 50%;
+  bottom: 13%;
+  transform: translateX(-50%);
+  animation-delay: 0.8s;
+}
+
+@keyframes nodeFloat{
+  0%,100%{
+    margin-top: 0;
+  }
+  50%{
+    margin-top: -10px;
+  }
+}
+
+.signal-line{
+  position: absolute;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(0,245,255,0.65), transparent);
+  transform-origin: left center;
+  opacity: 0.8;
+  animation: signalPulse 2.4s ease-in-out infinite;
+}
+
+.line-one{
+  width: 210px;
+  left: 24%;
+  top: 40%;
+  transform: rotate(20deg);
+}
+
+.line-two{
+  width: 220px;
+  right: 24%;
+  top: 40%;
+  transform: rotate(-20deg);
+}
+
+.line-three{
+  width: 190px;
+  left: 42%;
+  bottom: 28%;
+  transform: rotate(90deg);
+}
+
+@keyframes signalPulse{
+  0%,100%{
+    opacity: 0.25;
+  }
+  50%{
+    opacity: 0.95;
+  }
+}
+
+.sim-data{
+  padding: 24px 26px 28px;
+  border-top: 1px solid rgba(255,255,255,0.07);
+}
+
+.data-row{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 12px 0 8px;
+  color: rgba(225,235,245,0.68);
+  font-size: 13px;
+}
+
+.data-row strong{
+  color: #00f5ff;
+  font-size: 13px;
+}
+
+.data-bar{
+  width: 100%;
+  height: 7px;
+  border-radius: 999px;
+  overflow: hidden;
+  background: rgba(255,255,255,0.06);
+}
+
+.data-bar i{
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, #00f5ff, #6c7cff);
+  box-shadow: 0 0 18px rgba(0,245,255,0.28);
+  animation: barFlow 2.8s ease-in-out infinite;
+}
+
+@keyframes barFlow{
+  0%,100%{
+    filter: brightness(1);
+  }
+  50%{
+    filter: brightness(1.45);
+  }
+}
+
+@media(max-width: 1000px){
+  .tech-layout{
+    grid-template-columns: 1fr;
+  }
+
+  .simulation-panel{
+    min-height: 560px;
+  }
+}
+
+@media(max-width: 700px){
+  .tech-card{
+    grid-template-columns: 1fr;
+  }
+
+  .sim-screen{
+    height: 320px;
+  }
+}
+ .project-info-panel{
+  min-height: 610px;
+  border-radius: 32px;
+  overflow: hidden;
+  position: relative;
+  border: 1px solid rgba(0,245,255,0.18);
+  background:
+    radial-gradient(circle at 25% 20%, rgba(0,245,255,0.12), transparent 34%),
+    radial-gradient(circle at 80% 75%, rgba(108,59,255,0.15), transparent 32%),
+    rgba(4,10,22,0.76);
+  backdrop-filter: blur(18px);
+  box-shadow:
+    0 35px 100px rgba(0,0,0,0.36),
+    inset 0 1px 0 rgba(255,255,255,0.06);
+  padding: 0;
+}
+
+.project-info-panel::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  background-image:
+    linear-gradient(rgba(0,245,255,0.045) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0,245,255,0.045) 1px, transparent 1px);
+  background-size: 42px 42px;
+  opacity: 0.55;
+  pointer-events:none;
+}
+
+.project-info-header{
+  position: relative;
+  z-index: 2;
+  padding: 28px 32px;
+  border-bottom: 1px solid rgba(255,255,255,0.07);
+}
+
+.project-info-header small{
+  display: block;
+  color: rgba(0,245,255,0.78);
+  font-size: 11px;
+  letter-spacing: 2px;
+  margin-bottom: 10px;
+  font-weight: 800;
+}
+
+.project-info-header strong{
+  display: block;
+  color: #f5fbff;
+  font-size: clamp(22px, 2vw, 32px);
+  line-height: 1.25;
+  letter-spacing: -0.6px;
+}
+
+.project-info-content{
+  position: relative;
+  z-index: 2;
+  padding: 34px 32px 24px;
+}
+
+.project-info-content p{
+  color: rgba(225,235,245,0.72);
+  font-size: 17px;
+  line-height: 1.9;
+  margin-bottom: 20px;
+}
+
+.project-info-content p strong{
+  color: #00f5ff;
+  font-weight: 800;
+}
+
+.project-tags{
+  position: relative;
+  z-index: 2;
+  padding: 0 32px 34px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.project-tags span{
+  padding: 10px 14px;
+  border-radius: 999px;
+  border: 1px solid rgba(0,245,255,0.18);
+  background: rgba(0,245,255,0.06);
+  color: rgba(225,245,255,0.84);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
+  .mouse-glow{
+  position: fixed;
+  width: 260px;
+  height: 260px;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 1;
+  transform: translate(-50%, -50%);
+  background:
+    radial-gradient(circle, rgba(0,245,255,0.16) 0%, rgba(108,59,255,0.08) 35%, transparent 70%);
+  filter: blur(18px);
+  opacity: 0.75;
+  mix-blend-mode: screen;
+}
+
+.cursor-trail{
+  position: fixed;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 9998;
+  transform: translate(-50%, -50%);
+  background: #00f5ff;
+  box-shadow:
+    0 0 12px rgba(0,245,255,0.9),
+    0 0 28px rgba(108,59,255,0.45);
+  opacity: 0;
+}
+  </style>
+</head>
+<body>
+
+  <div class="cursor"></div>
+  <div class="mouse-glow"></div>
+
+  <header>
+    <div class="logo">VISION TECHNOLOGIES</div>
+  <nav>
+  <a href="index.html">Ana Sayfa</a>
+  <a href="otonom-araclar.html">Otonom Araçlar</a>
+  <a href="proje.html">Proje</a>
+  <a href="simulasyon.html">Simülasyon</a>
+</nav>
+  </header>
+
+  <section class="hero">
+  <div class="hero-content">
+    <div class="hero-badge">
+      DEEP LEARNING BASED AUTONOMOUS VEHICLE CONTROL WITH HAND GESTURES
+    </div>
+
+    <h1 id="title" class="typing-title"></h1>
+
+    <div class="hero-marquee">
+      <div class="hero-marquee-track">
+        <span>
+          Savunma Sanayi • Teknoloji • Yazılım • Otonom Araçlar • Yenilikçi Mühendislik Çözümleri •
+        </span>
+        <span>
+          Savunma Sanayi • Teknoloji • Yazılım • Otonom Araçlar • Yenilikçi Mühendislik Çözümleri •
+        </span>
+      </div>
+    </div>
+  </div>
+</section>
+
+  <section class="section tech-section">
+  <h2>Teknoloji Alanları</h2>
+
+  <div class="tech-layout">
+    <div class="tech-list">
+
+      <div class="tech-card">
+        <div class="tech-number">01</div>
+        <div>
+          <strong>Görüntü İşleme</strong>
+          <span>Kamera ve sensör verilerinin gerçek zamanlı analiz edilmesini sağlayan görüntü işleme altyapısı.</span>
+        </div>
+      </div>
+
+      <div class="tech-card">
+        <div class="tech-number">02</div>
+        <div>
+          <strong>Derin Öğrenme</strong>
+          <span>El hareketlerinin algılanması, sınıflandırılması ve kontrol komutlarına dönüştürülmesi için akıllı model yapısı.</span>
+        </div>
+      </div>
+
+      <div class="tech-card">
+        <div class="tech-number">03</div>
+        <div>
+          <strong>Otonom Araç Kontrolü</strong>
+          <span>Algılanan hareket komutlarının otonom araç sistemlerine güvenli ve kontrollü şekilde aktarılması.</span>
+        </div>
+      </div>
+
+      <div class="tech-card">
+        <div class="tech-number">04</div>
+        <div>
+          <strong>Yenilikçi Mühendislik</strong>
+          <span>Yazılım, yapay zekâ ve kontrol sistemlerini bir araya getiren teknoloji odaklı mühendislik yaklaşımı.</span>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="project-info-panel">
+  <div class="project-info-header">
+    <small>PROJECT OVERVIEW</small>
+    <strong>El Hareketleri ile Derin Öğrenme Tabanlı Otonom Araç Kontrolü</strong>
+  </div>
+
+  <div class="project-info-content">
+    <p>
+      <strong>El Hareketleri ile Derin Öğrenme Tabanlı Otonom Araç Kontrolü</strong> projesi,
+      insan-makine etkileşimini daha doğal, hızlı ve güvenli hale getirmeyi amaçlayan
+      yenilikçi bir teknoloji çalışmasıdır.
+    </p>
+
+    <p>
+      Sistem, kullanıcıya ait el hareketlerini derin öğrenme yöntemleriyle algılayarak
+      anlamlandırmakta ve bu hareketleri otonom araç için kontrol komutlarına dönüştürmektedir.
+    </p>
+
+    <p>
+      Özellikle savunma sanayii, otonom araçlar ve riskli operasyon alanlarında kullanılabilecek
+      bu yaklaşım; temassız kontrol, yüksek doğruluk ve operasyonel verimlilik gibi önemli
+      avantajlar sunmaktadır.
+    </p>
+
+    <p>
+      Projemiz, geleceğin akıllı ve güvenli otonom sistemlerine katkı sağlamayı hedeflemektedir.
+    </p>
+  </div>
+
+  <div class="project-tags">
+    <span>Deep Learning</span>
+    <span>Computer Vision</span>
+    <span>Autonomous Control</span>
+    <span>Gesture Recognition</span>
+  </div>
+</div>
+</section>
+  <footer>© 2026 YAĞMUR SÖNMEZ (BİLGİSAYAR MÜHENDİSİ) • Vision Technologies</footer>
+
+ <script>
+ /* PREMIUM MOUSE EFFECT */
+const cursor = document.querySelector(".cursor");
+const mouseGlow = document.querySelector(".mouse-glow");
+
+let mouseX = window.innerWidth / 2;
+let mouseY = window.innerHeight / 2;
+let glowX = mouseX;
+let glowY = mouseY;
+
+document.addEventListener("mousemove", (e) => {
+  mouseX = e.clientX;
+  mouseY = e.clientY;
+
+  if (cursor) {
+    cursor.style.top = mouseY + "px";
+    cursor.style.left = mouseX + "px";
+  }
+
+  createMouseTrail(mouseX, mouseY);
+});
+
+function createMouseTrail(x, y){
+  const trail = document.createElement("span");
+  trail.className = "cursor-trail";
+  trail.style.left = x + "px";
+  trail.style.top = y + "px";
+
+  document.body.appendChild(trail);
+
+  requestAnimationFrame(() => {
+    trail.style.transition = "0.7s ease";
+    trail.style.opacity = "0.65";
+    trail.style.transform = `translate(-50%, -50%) scale(${1.8 + Math.random() * 1.4})`;
+  });
+
+  setTimeout(() => {
+    trail.style.opacity = "0";
+    trail.style.transform = "translate(-50%, -50%) scale(0.2)";
+  }, 120);
+
+  setTimeout(() => {
+    trail.remove();
+  }, 760);
+}
+
+function animateMouseGlow(){
+  glowX += (mouseX - glowX) * 0.08;
+  glowY += (mouseY - glowY) * 0.08;
+
+  if(mouseGlow){
+    mouseGlow.style.left = glowX + "px";
+    mouseGlow.style.top = glowY + "px";
+  }
+
+  requestAnimationFrame(animateMouseGlow);
+}
+
+animateMouseGlow();
+
+  /* GSAP HERO */
+  /* TYPEWRITER TITLE LOOP */
+const titleElement = document.getElementById("title");
+
+const titleLines = [
+  "EL HAREKETLERİ İLE DERİN ÖĞRENME TABANLI",
+  "OTONOM ARAÇ KONTROLÜ"
+];
+
+const fullTitle = titleLines.join("\n");
+
+let typingIndex = 0;
+
+function renderTypingText(text){
+  titleElement.innerHTML = text.replace(/\n/g, "<br>");
+}
+
+function startTitleTyping(){
+  typingIndex = 0;
+  renderTypingText("");
+
+  const typingInterval = setInterval(() => {
+    typingIndex++;
+
+    const currentText = fullTitle.substring(0, typingIndex);
+    renderTypingText(currentText);
+
+    if(typingIndex >= fullTitle.length){
+      clearInterval(typingInterval);
+
+      setTimeout(() => {
+        startTitleTyping();
+      }, 8000);
+    }
+  }, 55);
+}
+
+startTitleTyping();
+
+  gsap.from(".hero-marquee", {
+  y: 30,
+  opacity: 0,
+  duration: 1.2,
+  delay: 0.35,
+  ease: "power3.out"
+});
+
+  gsap.from(".hero-badge", {
+    y: 30,
+    opacity: 0,
+    duration: 1,
+    delay: 0.15,
+    ease: "power3.out"
+  });
+/* FLU CODE FLOW BACKGROUND */
+const codeCanvas = document.createElement("canvas");
+const codeCtx = codeCanvas.getContext("2d");
+
+codeCanvas.style.position = "fixed";
+codeCanvas.style.top = "0";
+codeCanvas.style.left = "0";
+codeCanvas.style.width = "100%";
+codeCanvas.style.height = "100%";
+codeCanvas.style.zIndex = "-5";
+codeCanvas.style.pointerEvents = "none";
+codeCanvas.style.opacity = "0.28";
+codeCanvas.style.filter = "blur(0.7px)";
+document.body.appendChild(codeCanvas);
+
+function resizeCodeCanvas(){
+  codeCanvas.width = window.innerWidth;
+  codeCanvas.height = window.innerHeight;
+}
+
+resizeCodeCanvas();
+
+const codeWords = [
+  "AI", "VISION", "DRONE", "SYSTEM", "TRACK", "DATA",
+  "SCAN", "CORE", "UAV", "SIGNAL", "TARGET", "VECTOR",
+  "0101", "1100", "AUTH", "NODE", "SYNC", "MODEL"
+];
+
+const codeStreams = Array.from({ length: 62 }, () => ({
+  x: Math.random() * window.innerWidth,
+  y: Math.random() * window.innerHeight,
+  speed: 0.35 + Math.random() * 0.85,
+  size: 10 + Math.random() * 8,
+  alpha: 0.08 + Math.random() * 0.22,
+  word: codeWords[Math.floor(Math.random() * codeWords.length)]
+}));
+
+function drawCodeFlow(){
+  codeCtx.clearRect(0, 0, codeCanvas.width, codeCanvas.height);
+
+  codeCtx.fillStyle = "rgba(3, 4, 10, 0.12)";
+  codeCtx.fillRect(0, 0, codeCanvas.width, codeCanvas.height);
+
+  codeStreams.forEach((stream, index) => {
+    codeCtx.font = `${stream.size}px monospace`;
+    codeCtx.fillStyle = `rgba(0, 245, 255, ${stream.alpha})`;
+
+    const repeatCount = 4 + Math.floor(Math.random() * 3);
+
+    for(let i = 0; i < repeatCount; i++){
+      const text = codeWords[(index + i) % codeWords.length];
+      codeCtx.fillText(text, stream.x, stream.y - i * stream.size * 1.8);
+    }
+
+    stream.y += stream.speed;
+    stream.x += Math.sin(stream.y * 0.006) * 0.18;
+
+    if(stream.y > codeCanvas.height + 120){
+      stream.y = -80;
+      stream.x = Math.random() * codeCanvas.width;
+      stream.word = codeWords[Math.floor(Math.random() * codeWords.length)];
+    }
+  });
+
+  requestAnimationFrame(drawCodeFlow);
+}
+
+drawCodeFlow();
+
+window.addEventListener("resize", resizeCodeCanvas);
+  /* THREE JS */
+  const scene = new THREE.Scene();
+  scene.fog = new THREE.Fog(0x03040A, 14, 42);
+
+  const camera = new THREE.PerspectiveCamera(
+    56,
+    window.innerWidth / window.innerHeight,
+    0.1,
+    1000
+  );
+
+  const renderer = new THREE.WebGLRenderer({
+    alpha: true,
+    antialias: true
+  });
+
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+  renderer.setSize(window.innerWidth, window.innerHeight);
+  renderer.setClearColor(0x03040A, 0);
+  document.body.appendChild(renderer.domElement);
+
+  camera.position.set(1.5, 5.4, 10.4);
+  /* LIGHTS */
+  const ambient = new THREE.AmbientLight(0xffffff, 0.9);
+  scene.add(ambient);
+
+  const keyLight = new THREE.PointLight(0x00f5ff, 3.0, 70);
+  keyLight.position.set(5.5, 5, 8);
+  scene.add(keyLight);
+
+  const rimLight = new THREE.PointLight(0x6c3bff, 1.9, 70);
+  rimLight.position.set(-6, 3, 7);
+  scene.add(rimLight);
+
+  const fillLight = new THREE.PointLight(0xffffff, 1.25, 55);
+  fillLight.position.set(0, -1.5, 10);
+  scene.add(fillLight);
+
+  const underGlow = new THREE.PointLight(0x00f5ff, 0.55, 35);
+  underGlow.position.set(0, -3, 4);
+  scene.add(underGlow);
+
+  /* MATERIALS */
+  const matteBlack = new THREE.MeshStandardMaterial({
+    color: 0x0a1018,
+    metalness: 0.95,
+    roughness: 0.3
+  });
+
+  const graphite = new THREE.MeshStandardMaterial({
+  color: 0x182a42,
+  metalness: 0.86,
+  roughness: 0.22
+  });
+
+  const darkPanel = new THREE.MeshStandardMaterial({
+    color: 0x060b12,
+    metalness: 0.92,
+    roughness: 0.22
+  });
+
+ const cyanGlow = new THREE.MeshStandardMaterial({
+  color: 0x00f5ff,
+  emissive: 0x00d9ff,
+  emissiveIntensity: 0.75,
+  metalness: 0.55,
+  roughness: 0.16
+});
+
+  const glass = new THREE.MeshStandardMaterial({
+    color: 0xcffbff,
+    emissive: 0x003944,
+    emissiveIntensity: 0.28,
+    metalness: 0.2,
+    roughness: 0.08,
+    transparent: true,
+    opacity: 0.9
+  });
+
+  const propMat = new THREE.MeshStandardMaterial({
+    color: 0xe0fbff,
+    emissive: 0x00f5ff,
+    emissiveIntensity: 0.14,
+    transparent: true,
+    opacity: 0.76,
+    metalness: 0.32,
+    roughness: 0.28
+  });
+
+  const skidMaterial = new THREE.MeshStandardMaterial({
+    color: 0x8b97aa,
+    metalness: 0.62,
+    roughness: 0.36
+  });
+
+  /* MAIN GROUP */
+  const droneGroup = new THREE.Group();
+  droneGroup.position.set(0, 0.15, 0);
+  droneGroup.scale.set(1.08, 1.08, 1.08);
+  scene.add(droneGroup);
+
+  /* BODY - DAHA ESTETİK VE PROFESYONEL */
+  const coreBody = new THREE.Mesh(
+    new THREE.CylinderGeometry(1.02, 1.12, 0.42, 8),
+    matteBlack
+  );
+  coreBody.rotation.y = Math.PI / 8;
+  droneGroup.add(coreBody);
+
+  const topDeck = new THREE.Mesh(
+    new THREE.CylinderGeometry(0.72, 0.84, 0.22, 8),
+    graphite
+  );
+  topDeck.position.y = 0.3;
+  topDeck.rotation.y = Math.PI / 8;
+  droneGroup.add(topDeck);
+
+  const lowerDeck = new THREE.Mesh(
+    new THREE.CylinderGeometry(0.82, 0.92, 0.18, 8),
+    darkPanel
+  );
+  lowerDeck.position.y = -0.28;
+  lowerDeck.rotation.y = Math.PI / 8;
+  droneGroup.add(lowerDeck);
+
+  /* SIDE ARMOR PANELS */
+  const sidePanelL = new THREE.Mesh(
+    new THREE.BoxGeometry(1.15, 0.18, 0.54),
+    graphite
+  );
+  sidePanelL.position.set(-0.92, 0.04, 0);
+  sidePanelL.rotation.z = -0.18;
+  droneGroup.add(sidePanelL);
+
+  const sidePanelR = new THREE.Mesh(
+    new THREE.BoxGeometry(1.15, 0.18, 0.54),
+    graphite
+  );
+  sidePanelR.position.set(0.92, 0.04, 0);
+  sidePanelR.rotation.z = 0.18;
+  droneGroup.add(sidePanelR);
+
+  /* NOSE */
+  const nose = new THREE.Mesh(
+    new THREE.ConeGeometry(0.36, 0.88, 4),
+    graphite
+  );
+  nose.rotation.x = Math.PI / 2;
+  nose.rotation.z = Math.PI / 4;
+  nose.position.set(0, 0.03, 1.05);
+  droneGroup.add(nose);
+
+  const frontGlass = new THREE.Mesh(
+    new THREE.BoxGeometry(0.68, 0.14, 0.1),
+    glass
+  );
+  frontGlass.position.set(0, 0.1, 1.28);
+  droneGroup.add(frontGlass);
+
+  const frontGlow = new THREE.Mesh(
+    new THREE.BoxGeometry(0.42, 0.06, 0.08),
+    cyanGlow
+  );
+  frontGlow.position.set(0, -0.03, 1.18);
+  droneGroup.add(frontGlow);
+
+  /* CAMERA / SENSOR */
+  const cameraMount = new THREE.Mesh(
+    new THREE.CylinderGeometry(0.04, 0.04, 0.24, 12),
+    graphite
+  );
+  cameraMount.position.set(0, -0.45, 0.62);
+  droneGroup.add(cameraMount);
+
+  const cameraBall = new THREE.Mesh(
+    new THREE.SphereGeometry(0.22, 20, 16),
+    darkPanel
+  );
+  cameraBall.scale.set(1, 0.8, 1);
+  cameraBall.position.set(0, -0.63, 0.72);
+  droneGroup.add(cameraBall);
+
+  const cameraLens = new THREE.Mesh(
+    new THREE.CylinderGeometry(0.1, 0.1, 0.06, 24),
+    glass
+  );
+  cameraLens.rotation.x = Math.PI / 2;
+  cameraLens.position.set(0, -0.63, 0.94);
+  droneGroup.add(cameraLens);
+
+  /* REAR FINS */
+  const finL = new THREE.Mesh(
+    new THREE.BoxGeometry(0.1, 0.45, 0.26),
+    graphite
+  );
+  finL.position.set(-0.38, 0.42, -0.8);
+  finL.rotation.z = 0.14;
+  droneGroup.add(finL);
+
+  const finR = new THREE.Mesh(
+    new THREE.BoxGeometry(0.1, 0.45, 0.26),
+    graphite
+  );
+  finR.position.set(0.38, 0.42, -0.8);
+  finR.rotation.z = -0.14;
+  droneGroup.add(finR);
+
+  /* ARM + MOTOR SYSTEM */
+  const propellers = [];
+  const glowDots = [];
+
+  function createArm(angle) {
+    const armGroup = new THREE.Group();
+    armGroup.rotation.y = angle;
+
+    const arm = new THREE.Mesh(
+      new THREE.BoxGeometry(2.2, 0.12, 0.16),
+      graphite
+    );
+    arm.position.x = 1.06;
+    arm.position.y = 0.1;
+    armGroup.add(arm);
+
+    const support = new THREE.Mesh(
+      new THREE.BoxGeometry(0.9, 0.08, 0.1),
+      darkPanel
+    );
+    support.position.set(0.52, -0.06, 0);
+    support.rotation.z = -0.26;
+    armGroup.add(support);
+
+    const motorGroup = new THREE.Group();
+    motorGroup.position.set(2.12, 0.1, 0);
+
+    const motorBase = new THREE.Mesh(
+      new THREE.CylinderGeometry(0.26, 0.26, 0.22, 28),
+      darkPanel
+    );
+    motorGroup.add(motorBase);
+
+    const motorTop = new THREE.Mesh(
+      new THREE.CylinderGeometry(0.18, 0.2, 0.16, 24),
+      graphite
+    );
+    motorTop.position.y = 0.18;
+    motorGroup.add(motorTop);
+
+    const glowDot = new THREE.Mesh(
+      new THREE.SphereGeometry(0.05, 12, 12),
+      cyanGlow
+    );
+    glowDot.position.set(0, 0.28, 0);
+    motorGroup.add(glowDot);
+    glowDots.push(glowDot);
+
+    const propGroup = new THREE.Group();
+    propGroup.position.y = 0.32;
+
+    const hub = new THREE.Mesh(
+      new THREE.CylinderGeometry(0.07, 0.07, 0.05, 14),
+      cyanGlow
+    );
+    hub.rotation.x = Math.PI / 2;
+    propGroup.add(hub);
+
+    const blade1 = new THREE.Mesh(
+      new THREE.BoxGeometry(1.02, 0.03, 0.1),
+      propMat
+    );
+    propGroup.add(blade1);
+
+    const blade2 = new THREE.Mesh(
+      new THREE.BoxGeometry(1.02, 0.03, 0.1),
+      propMat
+    );
+    blade2.rotation.y = Math.PI / 2;
+    propGroup.add(blade2);
+
+    const blurDisc = new THREE.Mesh(
+      new THREE.CylinderGeometry(0.58, 0.58, 0.012, 36),
+      new THREE.MeshBasicMaterial({
+        color: 0x00f5ff,
+        transparent: true,
+        opacity: 0.05,
+        side: THREE.DoubleSide
+      })
+    );
+    blurDisc.rotation.x = Math.PI / 2;
+    blurDisc.position.y = 0.01;
+    propGroup.add(blurDisc);
+
+    motorGroup.add(propGroup);
+    propellers.push(propGroup);
+
+    armGroup.add(motorGroup);
+    droneGroup.add(armGroup);
+  }
+
+  createArm(Math.PI / 4);
+  createArm(3 * Math.PI / 4);
+  createArm(-Math.PI / 4);
+  createArm(-3 * Math.PI / 4);
+
+  /* LANDING SKIDS */
+  function createSkidRail(x) {
+    const legFront = new THREE.Mesh(
+      new THREE.CylinderGeometry(0.03, 0.03, 0.86, 12),
+      skidMaterial
+    );
+    legFront.position.set(x, -0.62, 0.45);
+    legFront.rotation.z = x > 0 ? 0.16 : -0.16;
+    droneGroup.add(legFront);
+
+    const legBack = new THREE.Mesh(
+      new THREE.CylinderGeometry(0.03, 0.03, 0.86, 12),
+      skidMaterial
+    );
+    legBack.position.set(x, -0.62, -0.45);
+    legBack.rotation.z = x > 0 ? 0.16 : -0.16;
+    droneGroup.add(legBack);
+
+    const rail = new THREE.Mesh(
+      new THREE.CylinderGeometry(0.03, 0.03, 1.28, 12),
+      skidMaterial
+    );
+    rail.position.set(x, -1.0, 0);
+    rail.rotation.x = Math.PI / 2;
+    droneGroup.add(rail);
+  }
+
+  createSkidRail(0.55);
+  createSkidRail(-0.55);
+
+  /* ARKA PROFESYONEL HALKALAR */
+  function createRing(radius, tube, color, opacity, rotX, rotY, rotZ, z) {
+    const ring = new THREE.Mesh(
+      new THREE.TorusGeometry(radius, tube, 16, 140),
+      new THREE.MeshBasicMaterial({
+        color: color,
+        transparent: true,
+        opacity: opacity
+      })
+    );
+    ring.rotation.set(rotX, rotY, rotZ);
+    ring.position.z = z;
+    scene.add(ring);
+    return ring;
+  }
+
+  const ring1 = createRing(3.4, 0.028, 0x00f5ff, 0.22, 1.16, 0.22, 0.0, -1.0);
+const ring2 = createRing(4.2, 0.022, 0x6c3bff, 0.16, 1.34, -0.22, 0.1, -1.55);
+const ring3 = createRing(5.0, 0.018, 0xffffff, 0.10, 1.24, 0.12, -0.15, -2.0);
+const ring4 = createRing(5.8, 0.016, 0x00f5ff, 0.10, 1.42, -0.18, 0.22, -2.3);
+
+  /* PARTICLES */
+  const particleCount = 260;
+  const positions = new Float32Array(particleCount * 3);
+
+  for (let i = 0; i < particleCount; i++) {
+   positions[i * 3] = (Math.random() - 0.5) * 30;
+positions[i * 3 + 1] = (Math.random() - 0.5) * 18;
+positions[i * 3 + 2] = (Math.random() - 0.5) * 24 - 3;
+  }
+
+  const particleGeo = new THREE.BufferGeometry();
+  particleGeo.setAttribute("position", new THREE.BufferAttribute(positions, 3));
+
+  const particleMat = new THREE.PointsMaterial({
+  color: 0x00f5ff,
+  size: 0.038,
+  transparent: true,
+  opacity: 0.34
+});
+
+  const particles = new THREE.Points(particleGeo, particleMat);
+  scene.add(particles);
+
+  /* MOUSE */
+  const mouse = { x: 0, y: 0, tx: 0, ty: 0 };
+
+  document.addEventListener("mousemove", (e) => {
+    mouse.tx = (e.clientX / window.innerWidth - 0.5) * 2;
+    mouse.ty = (e.clientY / window.innerHeight - 0.5) * 2;
+  });
+
+  /* BAŞLANGIÇ AÇISI - BİRAZ DAHA YUKARIDAN */
+ droneGroup.rotation.x = 0.30;
+droneGroup.rotation.z = 0.14;
+  /* ANIMATION */
+  const clock = new THREE.Clock();
+
+  function animate() {
+    requestAnimationFrame(animate);
+    const t = clock.getElapsedTime();
+
+    mouse.x += (mouse.tx - mouse.x) * 0.03;
+    mouse.y += (mouse.ty - mouse.y) * 0.03;
+
+    /* ANA DÖNÜŞ */
+    droneGroup.rotation.y += 0.0105;
+
+    /* YUKARIDAN PROFESYONEL BAKIŞ */
+   droneGroup.rotation.x = 0.30 + Math.sin(t * 0.65) * 0.012 - mouse.y * 0.008;
+   droneGroup.rotation.z = 0.12 + Math.cos(t * 0.45) * 0.009 + mouse.x * 0.010;
+    droneGroup.position.y = 0.12 + Math.sin(t * 1.25) * 0.08;
+
+    propellers.forEach((prop, i) => {
+      prop.rotation.y += i % 2 === 0 ? 0.48 : -0.48;
+    });
+
+    glowDots.forEach((dot, i) => {
+      dot.material.emissiveIntensity = 0.35 + (Math.sin(t * 2 + i) + 1) * 0.08;
+    });
+
+    ring1.rotation.z += 0.0018;
+    ring2.rotation.z -= 0.0012;
+    ring3.rotation.z += 0.0008;
+    ring4.rotation.z -= 0.0006;
+
+    particles.rotation.y += 0.00055;
+
+  camera.position.x += (((mouse.x * 0.14) + 1.5) - camera.position.x) * 0.02;
+camera.position.y += (((-mouse.y * 0.05) + 5.4) - camera.position.y) * 0.02;
+camera.position.z += ((10.4) - camera.position.z) * 0.02;
+camera.lookAt(0, -0.02, 0);
+    renderer.render(scene, camera);
+  }
+
+  animate();
+
+  /* RESIZE */
+  window.addEventListener("resize", () => {
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    camera.aspect = window.innerWidth / window.innerHeight;
+    camera.updateProjectionMatrix();
+  });
+</script>

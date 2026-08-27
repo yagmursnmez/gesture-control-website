@@ -1,0 +1,3000 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Vision Technologies</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700;800&display=swap" rel="stylesheet">
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+
+  <style>
+    .hero-content{
+  position: relative;
+  z-index: 10;
+  width: min(1280px, 94%);
+  margin: 0 auto;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  /* Drone’un önü kapanmasın diye yazı bloğunu biraz aşağı aldık */
+  transform: translateY(215px);
+}
+
+.hero-badge{
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 22px;
+  margin-bottom: 24px;
+  border: 1px solid rgba(0, 245, 255, 0.24);
+  border-radius: 999px;
+  background: rgba(7, 15, 28, 0.50);
+  backdrop-filter: blur(12px);
+  color: rgba(235, 245, 255, 0.90);
+  font-size: clamp(9px, 0.8vw, 12px);
+  font-weight: 600;
+  letter-spacing: 1.8px;
+  text-transform: uppercase;
+  box-shadow: 0 0 30px rgba(0, 245, 255, 0.08);
+  max-width: 94%;
+}
+
+#title{
+  margin: 0;
+  max-width: 1180px;
+  line-height: 1.05;
+  font-weight: 800;
+  letter-spacing: -2px;
+
+  /* Önceki gibi dev değil, drone’u kapatmayacak premium ölçü */
+  font-size: clamp(30px, 4.25vw, 64px);
+  background: linear-gradient(
+    90deg,
+    #f5fbff 0%,
+    #bdfbff 26%,
+    #22e7ff 58%,
+    #4fb6ff 78%,
+    #8a7dff 100%
+  );
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+
+  text-transform: uppercase;
+  text-align: center;
+
+  /* Okunurluk için hafif gölge, ama drone’u öldürmez */
+  filter: drop-shadow(0 0 22px rgba(0, 245, 255, 0.10));
+}
+  .typing-title{
+  min-height: 225px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+
+  font-size: clamp(32px, 4.7vw, 72px);
+  line-height: 1.08;
+  font-weight: 800;
+  letter-spacing: -1.4px;
+  text-transform: uppercase;
+
+  background: linear-gradient(
+    90deg,
+    #ffffff 0%,
+    #b9ffff 18%,
+    #00f5ff 38%,
+    #28bfff 58%,
+    #6c7cff 78%,
+    #ffffff 100%
+  );
+  background-size: 220% 100%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+
+  animation: titleGradientMove 4.8s ease-in-out infinite;
+  filter:
+    drop-shadow(0 0 12px rgba(0,245,255,0.18))
+    drop-shadow(0 0 32px rgba(108,59,255,0.10));
+}
+
+.typing-title::after{
+  content: "";
+  display: inline-block;
+  width: 4px;
+  height: 0.82em;
+  margin-left: 8px;
+  background: #00f5ff;
+  box-shadow: 0 0 18px rgba(0,245,255,0.9);
+  animation: cursorBlink 0.8s infinite;
+  vertical-align: middle;
+}
+
+@keyframes titleGradientMove{
+  0%{
+    background-position: 0% 50%;
+  }
+  50%{
+    background-position: 100% 50%;
+  }
+  100%{
+    background-position: 0% 50%;
+  }
+}
+
+@keyframes cursorBlink{
+  0%, 45%{
+    opacity: 1;
+  }
+  46%, 100%{
+    opacity: 0;
+  }
+}
+
+.hero-marquee{
+  width: 100%;
+  max-width: 1120px;
+  overflow: hidden;
+  margin-top: 22px;
+  padding: 8px 0;
+  position: relative;
+  opacity: 0.92;
+}
+
+.hero-marquee::before,
+.hero-marquee::after{
+  content:"";
+  position:absolute;
+  top:0;
+  width:120px;
+  height:100%;
+  z-index:2;
+  pointer-events:none;
+}
+
+.hero-marquee::before{
+  left:0;
+  background:linear-gradient(90deg, rgba(3,4,10,0.95), transparent);
+}
+
+.hero-marquee::after{
+  right:0;
+  background:linear-gradient(270deg, rgba(3,4,10,0.95), transparent);
+}
+
+.hero-marquee-track{
+  display: flex;
+  width: max-content;
+  white-space: nowrap;
+  animation: heroMarquee 24s linear infinite;
+}
+
+.hero-marquee-track span{
+  display: inline-block;
+  padding-right: 70px;
+  color: rgba(210, 220, 230, 0.54);
+  font-size: clamp(14px, 1.35vw, 19px);
+  font-weight: 500;
+  letter-spacing: 0.3px;
+}
+
+@keyframes heroMarquee{
+  0%{
+    transform: translateX(0);
+  }
+  100%{
+    transform: translateX(-50%);
+  }
+}
+
+.hero-marquee-track{
+  display: flex;
+  width: max-content;
+  white-space: nowrap;
+  animation: heroMarquee 22s linear infinite;
+}
+
+.hero-marquee-track span{
+  display: inline-block;
+  padding-right: 70px;
+  color: rgba(210, 220, 230, 0.50);
+  font-size: clamp(18px, 2vw, 26px);
+  font-weight: 500;
+  letter-spacing: 0.4px;
+}
+
+@keyframes heroMarquee{
+  0%{
+    transform: translateX(0);
+  }
+  100%{
+    transform: translateX(-50%);
+  }
+}
+    :root{
+      --bg:#03040A;
+      --bg2:#071A2F;
+      --cyan:#00F5FF;
+      --blue:#007BFF;
+      --purple:#6C3BFF;
+      --white:#F5F7FA;
+      --muted:#8A94A6;
+      --line:rgba(255,255,255,0.08);
+      --panel:rgba(7,26,47,0.28);
+      --glow:rgba(0,245,255,0.35);
+    }
+
+    *{
+      margin:0;
+      padding:0;
+      box-sizing:border-box;
+      font-family:'Poppins',sans-serif;
+    }
+
+    html{
+      scroll-behavior:smooth;
+    }
+
+    body{
+      background:
+        radial-gradient(circle at 20% 20%, rgba(0,245,255,0.08), transparent 25%),
+        radial-gradient(circle at 80% 15%, rgba(108,59,255,0.10), transparent 25%),
+        linear-gradient(180deg, #03040A 0%, #050915 45%, #03040A 100%);
+      color:var(--white);
+      overflow-x:hidden;
+    }
+
+    body::before{
+      content:"";
+      position:fixed;
+      inset:0;
+      background-image:
+        linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
+      background-size:80px 80px;
+      pointer-events:none;
+      z-index:-3;
+      mask-image:linear-gradient(to bottom, rgba(0,0,0,0.9), transparent 90%);
+    }
+
+    /* CANVAS */
+    canvas{
+      position:fixed;
+      top:0;
+      left:0;
+      z-index:-2;
+    }
+
+    /* CURSOR */
+    .cursor{
+  width: 18px;
+  height: 18px;
+  border: 2px solid var(--cyan);
+  box-shadow:
+    0 0 16px rgba(0,245,255,0.65),
+    0 0 34px rgba(108,59,255,0.28);
+  border-radius: 50%;
+  position: fixed;
+  pointer-events: none;
+  transform: translate(-50%, -50%);
+  z-index: 9999;
+  mix-blend-mode: screen;
+}
+
+    /* HEADER */
+    header{
+      position:fixed;
+      width:100%;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      padding:20px 60px;
+      backdrop-filter:blur(12px);
+      background:linear-gradient(to bottom, rgba(3,4,10,0.82), rgba(3,4,10,0.28));
+      border-bottom:1px solid rgba(255,255,255,0.05);
+      z-index:1000;
+    }
+
+    .logo{
+      color:var(--cyan);
+      font-weight:800;
+      letter-spacing:0.5px;
+      text-shadow:0 0 16px rgba(0,245,255,0.25);
+    }
+
+    nav a{
+      margin-left:25px;
+      color:var(--white);
+      text-decoration:none;
+      opacity:0.88;
+      position:relative;
+      transition:0.25s ease;
+    }
+
+    nav a::after{
+      content:"";
+      position:absolute;
+      left:0;
+      bottom:-6px;
+      width:0;
+      height:1px;
+      background:linear-gradient(90deg,var(--cyan),var(--purple));
+      transition:0.25s ease;
+    }
+
+    nav a:hover{
+      color:var(--cyan);
+      opacity:1;
+    }
+
+    nav a:hover::after{
+      width:100%;
+    }
+
+    /* HERO */
+    .hero{
+      height:100vh;
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      flex-direction:column;
+      text-align:center;
+      padding:0 20px;
+      position:relative;
+      z-index:2;
+    }
+
+    .hero h1{
+      font-size:90px;
+      line-height:0.95;
+      letter-spacing:-2px;
+      background:linear-gradient(90deg, #ffffff 0%, #c6ffff 35%, var(--cyan) 70%, #8f81ff 100%);
+      -webkit-background-clip:text;
+      -webkit-text-fill-color:transparent;
+      text-shadow:0 0 30px rgba(0,245,255,0.08);
+    }
+
+    .hero p{
+      opacity:0.78;
+      margin-top:20px;
+      color:var(--muted);
+      font-size:18px;
+      max-width:760px;
+    }
+
+    .hero-badge{
+      display:inline-block;
+      margin-bottom:22px;
+      padding:10px 16px;
+      border:1px solid rgba(0,245,255,0.18);
+      border-radius:999px;
+      background:rgba(7,26,47,0.28);
+      color:rgba(245,247,250,0.82);
+      font-size:12px;
+      letter-spacing:1.6px;
+      text-transform:uppercase;
+      backdrop-filter:blur(12px);
+    }
+
+    /* SECTION */
+    .section{
+      padding:120px 60px;
+      position:relative;
+      z-index:2;
+    }
+
+    .section h2{
+      text-align:center;
+      margin-bottom:50px;
+      font-size:42px;
+      color:var(--white);
+      letter-spacing:-1px;
+    }
+
+    .cards{
+      display:flex;
+      gap:25px;
+      flex-wrap:wrap;
+      justify-content:center;
+    }
+
+    .card{
+      width:260px;
+      padding:30px;
+      border:1px solid rgba(0,245,255,0.14);
+      background:var(--panel);
+      backdrop-filter:blur(10px);
+      border-radius:18px;
+      transition:0.35s ease;
+      color:var(--white);
+      box-shadow:inset 0 1px 0 rgba(255,255,255,0.04);
+    }
+
+    .card strong{
+      display:block;
+      color:var(--cyan);
+      margin-bottom:10px;
+      font-size:18px;
+    }
+
+    .card span{
+      display:block;
+      color:var(--muted);
+      font-size:14px;
+      line-height:1.7;
+    }
+
+    .card:hover{
+      transform:scale(1.06);
+      border-color:rgba(0,245,255,0.28);
+      box-shadow:0 0 40px rgba(0,245,255,0.16);
+    }
+
+    /* FOOTER */
+    footer{
+      text-align:center;
+      padding:40px;
+      border-top:1px solid rgba(0,245,255,0.12);
+      color:var(--muted);
+      position:relative;
+      z-index:2;
+    }
+
+    @media(max-width:900px){
+      .hero h1{
+        font-size:62px;
+      }
+
+      header{
+        padding:18px 24px;
+      }
+
+      .section{
+        padding:100px 24px;
+      }
+    }
+
+    @media(max-width:700px){
+      nav{
+        display:none;
+      }
+
+      .hero h1{
+        font-size:46px;
+      }
+
+      .hero p{
+        font-size:15px;
+      }
+
+      .card{
+        width:100%;
+        max-width:340px;
+      }
+    }
+ .tech-section{
+  padding-top: 130px;
+}
+
+.tech-layout{
+  max-width: 1380px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 0.9fr 1.1fr;
+  gap: 34px;
+  align-items: stretch;
+}
+
+.tech-list{
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.tech-card{
+  min-height: 132px;
+  padding: 24px 26px;
+  border-radius: 24px;
+  border: 1px solid rgba(0,245,255,0.16);
+  background: rgba(5,12,24,0.68);
+  backdrop-filter: blur(14px);
+  display: grid;
+  grid-template-columns: 58px 1fr;
+  gap: 18px;
+  align-items: flex-start;
+  transition: 0.35s ease;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.04),
+    0 20px 60px rgba(0,0,0,0.18);
+}
+
+.tech-card:hover{
+  transform: translateX(8px);
+  border-color: rgba(0,245,255,0.34);
+  box-shadow:
+    0 0 36px rgba(0,245,255,0.12),
+    inset 0 1px 0 rgba(255,255,255,0.06);
+}
+
+.tech-number{
+  width: 48px;
+  height: 48px;
+  border-radius: 16px;
+  display: grid;
+  place-items: center;
+  color: #00f5ff;
+  font-weight: 800;
+  background: rgba(0,245,255,0.08);
+  border: 1px solid rgba(0,245,255,0.18);
+  box-shadow: 0 0 24px rgba(0,245,255,0.08);
+}
+
+.tech-card strong{
+  display: block;
+  color: #00f5ff;
+  font-size: 21px;
+  margin-bottom: 9px;
+  letter-spacing: 0.2px;
+}
+
+.tech-card span{
+  display: block;
+  color: rgba(220,230,240,0.66);
+  font-size: 15px;
+  line-height: 1.7;
+}
+
+/* SIMULATION PANEL */
+.simulation-panel{
+  min-height: 610px;
+  border-radius: 32px;
+  overflow: hidden;
+  position: relative;
+  border: 1px solid rgba(0,245,255,0.18);
+  background:
+    radial-gradient(circle at 40% 35%, rgba(0,245,255,0.13), transparent 34%),
+    radial-gradient(circle at 75% 70%, rgba(108,59,255,0.16), transparent 32%),
+    rgba(4,10,22,0.74);
+  backdrop-filter: blur(18px);
+  box-shadow:
+    0 35px 100px rgba(0,0,0,0.36),
+    inset 0 1px 0 rgba(255,255,255,0.06);
+}
+
+.sim-header{
+  height: 82px;
+  padding: 22px 26px;
+  border-bottom: 1px solid rgba(255,255,255,0.07);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.sim-header small{
+  display: block;
+  color: rgba(180,195,210,0.55);
+  font-size: 11px;
+  letter-spacing: 1.6px;
+  margin-bottom: 5px;
+}
+
+.sim-header strong{
+  color: #f5fbff;
+  font-size: 17px;
+}
+
+.sim-status{
+  color: #001318;
+  background: linear-gradient(90deg, #00f5ff, #96ffff);
+  padding: 8px 13px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 1px;
+  box-shadow: 0 0 24px rgba(0,245,255,0.22);
+}
+
+.sim-screen{
+  position: relative;
+  height: 370px;
+  overflow: hidden;
+}
+
+.radar-grid{
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(0,245,255,0.055) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0,245,255,0.055) 1px, transparent 1px);
+  background-size: 38px 38px;
+  opacity: 0.75;
+}
+
+.radar-circle{
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  border-radius: 50%;
+  border: 1px solid rgba(0,245,255,0.18);
+  transform: translate(-50%, -50%);
+}
+
+.circle-one{
+  width: 220px;
+  height: 220px;
+}
+
+.circle-two{
+  width: 340px;
+  height: 340px;
+  border-color: rgba(108,59,255,0.20);
+}
+
+.radar-sweep{
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 180px;
+  height: 180px;
+  transform-origin: left top;
+  background: linear-gradient(45deg, rgba(0,245,255,0.26), transparent 55%);
+  filter: blur(0.4px);
+  animation: radarSweep 4.8s linear infinite;
+}
+
+@keyframes radarSweep{
+  0%{
+    transform: rotate(0deg);
+  }
+  100%{
+    transform: rotate(360deg);
+  }
+}
+
+.vehicle-core{
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 104px;
+  height: 104px;
+  border-radius: 28px;
+  border: 1px solid rgba(0,245,255,0.32);
+  background:
+    radial-gradient(circle at center, rgba(0,245,255,0.18), transparent 58%),
+    rgba(3,8,18,0.88);
+  display: grid;
+  place-items: center;
+  box-shadow:
+    0 0 40px rgba(0,245,255,0.18),
+    inset 0 0 30px rgba(0,245,255,0.06);
+}
+
+.vehicle-dot{
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: #00f5ff;
+  box-shadow: 0 0 28px rgba(0,245,255,0.9);
+  animation: corePulse 2s ease-in-out infinite;
+}
+
+.vehicle-core span{
+  position: absolute;
+  bottom: 15px;
+  color: rgba(235,245,255,0.7);
+  font-size: 11px;
+  letter-spacing: 1.4px;
+}
+
+@keyframes corePulse{
+  0%,100%{
+    transform: scale(1);
+    opacity: 0.9;
+  }
+  50%{
+    transform: scale(1.16);
+    opacity: 1;
+  }
+}
+
+.gesture-node{
+  position: absolute;
+  width: 76px;
+  height: 76px;
+  border-radius: 24px;
+  border: 1px solid rgba(0,245,255,0.24);
+  background: rgba(3,8,18,0.78);
+  display: grid;
+  place-items: center;
+  color: #00f5ff;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 1.2px;
+  box-shadow: 0 0 26px rgba(0,245,255,0.08);
+  animation: nodeFloat 3.6s ease-in-out infinite;
+}
+
+.node-one{
+  left: 16%;
+  top: 24%;
+}
+
+.node-two{
+  right: 17%;
+  top: 23%;
+  animation-delay: 0.4s;
+}
+
+.node-three{
+  left: 50%;
+  bottom: 13%;
+  transform: translateX(-50%);
+  animation-delay: 0.8s;
+}
+
+@keyframes nodeFloat{
+  0%,100%{
+    margin-top: 0;
+  }
+  50%{
+    margin-top: -10px;
+  }
+}
+
+.signal-line{
+  position: absolute;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(0,245,255,0.65), transparent);
+  transform-origin: left center;
+  opacity: 0.8;
+  animation: signalPulse 2.4s ease-in-out infinite;
+}
+
+.line-one{
+  width: 210px;
+  left: 24%;
+  top: 40%;
+  transform: rotate(20deg);
+}
+
+.line-two{
+  width: 220px;
+  right: 24%;
+  top: 40%;
+  transform: rotate(-20deg);
+}
+
+.line-three{
+  width: 190px;
+  left: 42%;
+  bottom: 28%;
+  transform: rotate(90deg);
+}
+
+@keyframes signalPulse{
+  0%,100%{
+    opacity: 0.25;
+  }
+  50%{
+    opacity: 0.95;
+  }
+}
+
+.sim-data{
+  padding: 24px 26px 28px;
+  border-top: 1px solid rgba(255,255,255,0.07);
+}
+
+.data-row{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 12px 0 8px;
+  color: rgba(225,235,245,0.68);
+  font-size: 13px;
+}
+
+.data-row strong{
+  color: #00f5ff;
+  font-size: 13px;
+}
+
+.data-bar{
+  width: 100%;
+  height: 7px;
+  border-radius: 999px;
+  overflow: hidden;
+  background: rgba(255,255,255,0.06);
+}
+
+.data-bar i{
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, #00f5ff, #6c7cff);
+  box-shadow: 0 0 18px rgba(0,245,255,0.28);
+  animation: barFlow 2.8s ease-in-out infinite;
+}
+
+@keyframes barFlow{
+  0%,100%{
+    filter: brightness(1);
+  }
+  50%{
+    filter: brightness(1.45);
+  }
+}
+
+@media(max-width: 1000px){
+  .tech-layout{
+    grid-template-columns: 1fr;
+  }
+
+  .simulation-panel{
+    min-height: 560px;
+  }
+}
+
+@media(max-width: 700px){
+  .tech-card{
+    grid-template-columns: 1fr;
+  }
+
+  .sim-screen{
+    height: 320px;
+  }
+}
+ .project-info-panel{
+  min-height: 610px;
+  border-radius: 32px;
+  overflow: hidden;
+  position: relative;
+  border: 1px solid rgba(0,245,255,0.18);
+  background:
+    radial-gradient(circle at 25% 20%, rgba(0,245,255,0.12), transparent 34%),
+    radial-gradient(circle at 80% 75%, rgba(108,59,255,0.15), transparent 32%),
+    rgba(4,10,22,0.76);
+  backdrop-filter: blur(18px);
+  box-shadow:
+    0 35px 100px rgba(0,0,0,0.36),
+    inset 0 1px 0 rgba(255,255,255,0.06);
+  padding: 0;
+}
+
+.project-info-panel::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  background-image:
+    linear-gradient(rgba(0,245,255,0.045) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0,245,255,0.045) 1px, transparent 1px);
+  background-size: 42px 42px;
+  opacity: 0.55;
+  pointer-events:none;
+}
+
+.project-info-header{
+  position: relative;
+  z-index: 2;
+  padding: 28px 32px;
+  border-bottom: 1px solid rgba(255,255,255,0.07);
+}
+
+.project-info-header small{
+  display: block;
+  color: rgba(0,245,255,0.78);
+  font-size: 11px;
+  letter-spacing: 2px;
+  margin-bottom: 10px;
+  font-weight: 800;
+}
+
+.project-info-header strong{
+  display: block;
+  color: #f5fbff;
+  font-size: clamp(22px, 2vw, 32px);
+  line-height: 1.25;
+  letter-spacing: -0.6px;
+}
+
+.project-info-content{
+  position: relative;
+  z-index: 2;
+  padding: 34px 32px 24px;
+}
+
+.project-info-content p{
+  color: rgba(225,235,245,0.72);
+  font-size: 17px;
+  line-height: 1.9;
+  margin-bottom: 20px;
+}
+
+.project-info-content p strong{
+  color: #00f5ff;
+  font-weight: 800;
+}
+
+.project-tags{
+  position: relative;
+  z-index: 2;
+  padding: 0 32px 34px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.project-tags span{
+  padding: 10px 14px;
+  border-radius: 999px;
+  border: 1px solid rgba(0,245,255,0.18);
+  background: rgba(0,245,255,0.06);
+  color: rgba(225,245,255,0.84);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
+  .mouse-glow{
+  position: fixed;
+  width: 260px;
+  height: 260px;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 1;
+  transform: translate(-50%, -50%);
+  background:
+    radial-gradient(circle, rgba(0,245,255,0.16) 0%, rgba(108,59,255,0.08) 35%, transparent 70%);
+  filter: blur(18px);
+  opacity: 0.75;
+  mix-blend-mode: screen;
+}
+
+.cursor-trail{
+  position: fixed;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 9998;
+  transform: translate(-50%, -50%);
+  background: #00f5ff;
+  box-shadow:
+    0 0 12px rgba(0,245,255,0.9),
+    0 0 28px rgba(108,59,255,0.45);
+  opacity: 0;
+}
+  
+.project-info-header{
+  position: relative;
+  z-index: 2;
+  padding: 34px 42px;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+}
+
+.project-info-header small{
+  display: block;
+  color: rgba(0,245,255,0.82);
+  font-size: 12px;
+  letter-spacing: 2.4px;
+  margin-bottom: 12px;
+  font-weight: 800;
+}
+
+.project-info-header strong{
+  display: block;
+  color: #f5fbff;
+  font-size: clamp(30px, 3vw, 48px);
+  line-height: 1.18;
+  letter-spacing: -1px;
+}
+
+.autonomous-info-content{
+  position: relative;
+  z-index: 2;
+  padding: 46px 42px 54px;
+}
+
+.autonomous-info-content p{
+  color: rgba(225,235,245,0.74);
+  font-size: clamp(18px, 1.35vw, 23px);
+  line-height: 1.95;
+  margin-bottom: 24px;
+  max-width: 1030px;
+}
+
+.autonomous-info-content strong{
+  color: #00f5ff;
+  font-weight: 800;
+}
+
+@media(max-width: 800px){
+  .autonomous-info-section{
+    padding: 120px 22px 90px;
+  }
+
+ 
+
+  .project-info-header,
+ .autonomous-info-section{
+  min-height: 100vh;
+  padding: 145px 40px 110px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.autonomous-info-wrapper{
+  width: min(1180px, 92%);
+  margin: 0 auto;
+  display: block;
+}
+
+.autonomous-info-card{
+  width: 100%;
+  margin: 0 auto 34px auto;
+  min-height: 680px;
+  border-radius: 34px;
+  overflow: hidden;
+  position: relative;
+  border: 1px solid rgba(0,245,255,0.20);
+  background:
+    radial-gradient(circle at 22% 18%, rgba(0,245,255,0.13), transparent 34%),
+    radial-gradient(circle at 82% 78%, rgba(108,59,255,0.18), transparent 34%),
+    rgba(4,10,22,0.78);
+  backdrop-filter: blur(20px);
+  box-shadow:
+    0 40px 120px rgba(0,0,0,0.42),
+    inset 0 1px 0 rgba(255,255,255,0.07);
+}
+
+.autonomous-info-card::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  background-image:
+    linear-gradient(rgba(0,245,255,0.045) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0,245,255,0.045) 1px, transparent 1px);
+  background-size: 42px 42px;
+  opacity: 0.5;
+  pointer-events:none;
+}
+
+.autonomous-info-card::after{
+  content:"";
+  position:absolute;
+  width: 360px;
+  height: 360px;
+  right: -120px;
+  bottom: -130px;
+  background: radial-gradient(circle, rgba(0,245,255,0.18), transparent 68%);
+  filter: blur(14px);
+  pointer-events:none;
+}
+
+.project-info-header{
+  text-align: center;
+  position: relative;
+  z-index: 2;
+  padding: 30px 36px;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+}
+
+.project-info-header small{
+  display: block;
+  color: rgba(0,245,255,0.82);
+  font-size: 11px;
+  letter-spacing: 2.4px;
+  margin-bottom: 12px;
+  font-weight: 800;
+}
+
+.project-info-header strong{
+  display: block;
+  color: #f5fbff;
+  font-size: clamp(26px, 2.2vw, 40px);
+  line-height: 1.18;
+  letter-spacing: -1px;
+}
+
+.autonomous-info-content{
+  text-align: center;
+  position: relative;
+  z-index: 2;
+  padding: 34px 36px 42px;
+}
+
+.autonomous-info-content p{
+  max-width: 1050px;
+  margin-left: auto;
+  margin-right: auto;
+  color: rgba(225,235,245,0.74);
+  font-size: clamp(16px, 1vw, 19px);
+  line-height: 1.85;
+  margin-bottom: 20px;
+}
+
+.autonomous-info-content strong{
+  color: #00f5ff;
+  font-weight: 800;
+}
+
+@media(max-width: 1100px){
+  .autonomous-info-wrapper{
+    grid-template-columns: 1fr;
+  }
+
+  .autonomous-info-card{
+    min-height: auto;
+  }
+}
+
+@media(max-width: 800px){
+  .autonomous-info-section{
+    padding: 120px 22px 90px;
+  }
+
+  .autonomous-info-wrapper{
+    width: 100%;
+    gap: 22px;
+  }
+
+  .autonomous-info-card{
+    border-radius: 28px;
+  }
+
+  .project-info-header,
+  .autonomous-info-content{
+    padding-left: 26px;
+    padding-right: 26px;
+  }
+
+  .autonomous-info-content p{
+    font-size: 15px;
+    line-height: 1.75;
+  }
+}
+ 
+  50%{
+    transform: translateY(-12px);
+  }
+}
+
+@media(max-width: 1200px){
+  .otonom-right-images{
+    right: 34px;
+  }
+
+  .otonom-right-images img{
+    width: 230px;
+  }
+
+  .otonom-right-images img:nth-child(2){
+    width: 250px;
+  }
+
+  .otonom-right-images img:nth-child(3){
+    width: 220px;
+  }
+}
+
+@media(max-width: 900px){
+  .otonom-right-images{
+    display: none;
+  }
+}
+  .split-content{
+  display: grid;
+  grid-template-columns: 1fr 330px;
+  gap: 34px;
+  align-items: start;
+}
+
+.text-side{
+  min-width: 0;
+}
+
+.image-side-small{
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  padding-top: 4px;
+}
+
+.image-side-small img{
+  width: 100%;
+  max-height: 190px;
+  object-fit: contain;
+  display: block;
+  border-radius: 22px;
+  padding: 12px;
+  background:
+    radial-gradient(circle at center, rgba(0,245,255,0.10), transparent 65%),
+    rgba(3,8,18,0.52);
+  border: 1px solid rgba(0,245,255,0.18);
+  filter:
+    drop-shadow(0 0 18px rgba(0,245,255,0.16))
+    drop-shadow(0 18px 30px rgba(0,0,0,0.38));
+  opacity: 0.92;
+}
+
+.image-side-small img:hover{
+  transform: scale(1.035);
+  transition: 0.35s ease;
+  opacity: 1;
+}
+
+@media(max-width: 1050px){
+  .split-content{
+    grid-template-columns: 1fr;
+  }
+
+  .image-side-small{
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .image-side-small img{
+    max-height: 150px;
+  }
+}
+
+@media(max-width: 700px){
+  .image-side-small{
+    grid-template-columns: 1fr;
+  }
+
+  .image-side-small img{
+    max-height: 210px;
+  }
+}
+  .uav-section{
+  position: relative;
+  z-index: 5;
+  padding: 80px 40px 130px;
+}
+
+.uav-info-box{
+  width: min(1320px, 95%);
+  margin: 0 auto;
+  border-radius: 34px;
+  border: 1px solid rgba(0,245,255,0.20);
+  background:
+    radial-gradient(circle at 20% 20%, rgba(0,245,255,0.12), transparent 34%),
+    radial-gradient(circle at 85% 80%, rgba(108,59,255,0.15), transparent 34%),
+    rgba(4,10,22,0.76);
+  backdrop-filter: blur(18px);
+  box-shadow:
+    0 40px 120px rgba(0,0,0,0.40),
+    inset 0 1px 0 rgba(255,255,255,0.07);
+  padding: 42px 48px;
+  position: relative;
+  overflow: hidden;
+}
+
+.uav-info-box::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  background-image:
+    linear-gradient(rgba(0,245,255,0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0,245,255,0.04) 1px, transparent 1px);
+  background-size: 42px 42px;
+  opacity: 0.45;
+  pointer-events:none;
+}
+
+.uav-info-box small,
+.uav-info-box h2,
+.uav-info-box p{
+  position: relative;
+  z-index: 2;
+}
+
+.uav-info-box small{
+  display: block;
+  color: rgba(0,245,255,0.82);
+  font-size: 12px;
+  letter-spacing: 2.4px;
+  margin-bottom: 14px;
+  font-weight: 800;
+}
+
+.uav-info-box h2{
+  color: #f5fbff;
+  font-size: clamp(34px, 4vw, 62px);
+  line-height: 1.08;
+  letter-spacing: -1.4px;
+  margin-bottom: 26px;
+}
+
+.uav-info-box p{
+  color: rgba(225,235,245,0.76);
+  font-size: clamp(17px, 1.2vw, 22px);
+  line-height: 1.9;
+  max-width: 1120px;
+}
+
+/* PNG KAYAN GÖRSEL ALANI */
+.uav-image-marquee{
+  width: 100%;
+  overflow: hidden;
+  margin-top: 54px;
+  position: relative;
+}
+
+.uav-image-marquee::before,
+.uav-image-marquee::after{
+  content:"";
+  position:absolute;
+  top:0;
+  width:160px;
+  height:100%;
+  z-index:3;
+  pointer-events:none;
+}
+
+.uav-image-marquee::before{
+  left:0;
+  background:linear-gradient(90deg, rgba(3,4,10,0.95), transparent);
+}
+
+.uav-image-marquee::after{
+  right:0;
+  background:linear-gradient(270deg, rgba(3,4,10,0.95), transparent);
+}
+
+.uav-image-track{
+  display: flex;
+  align-items: center;
+  gap: 80px;
+  width: max-content;
+  animation: uavImageFlow 28s linear infinite;
+}
+
+.uav-image-track img{
+  height: 220px;
+  width: auto;
+  object-fit: contain;
+  display: block;
+  flex: 0 0 auto;
+  filter:
+    drop-shadow(0 0 24px rgba(0,245,255,0.18))
+    drop-shadow(0 24px 42px rgba(0,0,0,0.44));
+  opacity: 0.95;
+}
+
+@keyframes uavImageFlow{
+  0%{
+    transform: translateX(0);
+  }
+  100%{
+    transform: translateX(-50%);
+  }
+}
+
+@media(max-width: 900px){
+  .uav-section{
+    padding: 70px 22px 100px;
+  }
+
+  .uav-info-box{
+    padding: 32px 26px;
+    border-radius: 28px;
+  }
+
+  .uav-image-track{
+    gap: 46px;
+  }
+
+  .uav-image-track img{
+    height: 150px;
+  }
+}
+  .ugv-section{
+  position: relative;
+  z-index: 5;
+  padding: 80px 40px 140px;
+}
+
+.ugv-info-box{
+  width: min(1320px, 95%);
+  margin: 0 auto;
+  border-radius: 34px;
+  border: 1px solid rgba(0,245,255,0.20);
+  background:
+    radial-gradient(circle at 22% 20%, rgba(0,245,255,0.12), transparent 34%),
+    radial-gradient(circle at 82% 80%, rgba(108,59,255,0.15), transparent 34%),
+    rgba(4,10,22,0.76);
+  backdrop-filter: blur(18px);
+  box-shadow:
+    0 40px 120px rgba(0,0,0,0.40),
+    inset 0 1px 0 rgba(255,255,255,0.07);
+  padding: 42px 48px;
+  position: relative;
+  overflow: hidden;
+}
+
+.ugv-info-box::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  background-image:
+    linear-gradient(rgba(0,245,255,0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0,245,255,0.04) 1px, transparent 1px);
+  background-size: 42px 42px;
+  opacity: 0.45;
+  pointer-events:none;
+}
+
+.ugv-info-box small,
+.ugv-info-box h2,
+.ugv-info-box p{
+  position: relative;
+  z-index: 2;
+}
+
+.ugv-info-box small{
+  display: block;
+  color: rgba(0,245,255,0.82);
+  font-size: 12px;
+  letter-spacing: 2.4px;
+  margin-bottom: 14px;
+  font-weight: 800;
+}
+
+.ugv-info-box h2{
+  color: #f5fbff;
+  font-size: clamp(34px, 4vw, 62px);
+  line-height: 1.08;
+  letter-spacing: -1.4px;
+  margin-bottom: 26px;
+}
+
+.ugv-info-box p{
+  color: rgba(225,235,245,0.76);
+  font-size: clamp(17px, 1.2vw, 22px);
+  line-height: 1.9;
+  max-width: 1120px;
+}
+
+/* KARA PNG KAYAN GÖRSEL ALANI */
+.ugv-image-marquee{
+  width: 100%;
+  overflow: hidden;
+  margin-top: 54px;
+  position: relative;
+}
+
+.ugv-image-marquee::before,
+.ugv-image-marquee::after{
+  content:"";
+  position:absolute;
+  top:0;
+  width:160px;
+  height:100%;
+  z-index:3;
+  pointer-events:none;
+}
+
+.ugv-image-marquee::before{
+  left:0;
+  background:linear-gradient(90deg, rgba(3,4,10,0.95), transparent);
+}
+
+.ugv-image-marquee::after{
+  right:0;
+  background:linear-gradient(270deg, rgba(3,4,10,0.95), transparent);
+}
+
+.ugv-image-track{
+  display: flex;
+  align-items: center;
+  gap: 80px;
+  width: max-content;
+  animation: ugvImageFlow 30s linear infinite;
+}
+
+.ugv-image-track img{
+  height: 220px;
+  width: auto;
+  object-fit: contain;
+  display: block;
+  flex: 0 0 auto;
+  filter:
+    drop-shadow(0 0 24px rgba(0,245,255,0.18))
+    drop-shadow(0 24px 42px rgba(0,0,0,0.44));
+  opacity: 0.95;
+}
+
+@keyframes ugvImageFlow{
+  0%{
+    transform: translateX(0);
+  }
+  100%{
+    transform: translateX(-50%);
+  }
+}
+
+@media(max-width: 900px){
+  .ugv-section{
+    padding: 70px 22px 110px;
+  }
+
+  .ugv-info-box{
+    padding: 32px 26px;
+    border-radius: 28px;
+  }
+
+  .ugv-image-track{
+    gap: 46px;
+  }
+
+  .ugv-image-track img{
+    height: 150px;
+  }
+}
+  .ida-section{
+  position: relative;
+  z-index: 5;
+  padding: 80px 40px 140px;
+}
+
+.ida-info-box{
+  width: min(1320px, 95%);
+  margin: 0 auto;
+  border-radius: 34px;
+  border: 1px solid rgba(0,245,255,0.20);
+  background:
+    radial-gradient(circle at 22% 20%, rgba(0,245,255,0.12), transparent 34%),
+    radial-gradient(circle at 82% 80%, rgba(108,59,255,0.15), transparent 34%),
+    rgba(4,10,22,0.76);
+  backdrop-filter: blur(18px);
+  box-shadow:
+    0 40px 120px rgba(0,0,0,0.40),
+    inset 0 1px 0 rgba(255,255,255,0.07);
+  padding: 42px 48px;
+  position: relative;
+  overflow: hidden;
+}
+
+.ida-info-box::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  background-image:
+    linear-gradient(rgba(0,245,255,0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0,245,255,0.04) 1px, transparent 1px);
+  background-size: 42px 42px;
+  opacity: 0.45;
+  pointer-events:none;
+}
+
+.ida-info-box small,
+.ida-info-box h2,
+.ida-info-box p{
+  position: relative;
+  z-index: 2;
+}
+
+.ida-info-box small{
+  display: block;
+  color: rgba(0,245,255,0.82);
+  font-size: 12px;
+  letter-spacing: 2.4px;
+  margin-bottom: 14px;
+  font-weight: 800;
+}
+
+.ida-info-box h2{
+  color: #f5fbff;
+  font-size: clamp(34px, 4vw, 62px);
+  line-height: 1.08;
+  letter-spacing: -1.4px;
+  margin-bottom: 26px;
+}
+
+.ida-info-box p{
+  color: rgba(225,235,245,0.76);
+  font-size: clamp(17px, 1.2vw, 22px);
+  line-height: 1.9;
+  max-width: 1120px;
+}
+
+.ida-image-marquee{
+  width: 100%;
+  overflow: hidden;
+  margin-top: 54px;
+  position: relative;
+}
+
+.ida-image-marquee::before,
+.ida-image-marquee::after{
+  content:"";
+  position:absolute;
+  top:0;
+  width:160px;
+  height:100%;
+  z-index:3;
+  pointer-events:none;
+}
+
+.ida-image-marquee::before{
+  left:0;
+  background:linear-gradient(90deg, rgba(3,4,10,0.95), transparent);
+}
+
+.ida-image-marquee::after{
+  right:0;
+  background:linear-gradient(270deg, rgba(3,4,10,0.95), transparent);
+}
+
+.ida-image-track{
+  display: flex;
+  align-items: center;
+  gap: 80px;
+  width: max-content;
+  animation: idaImageFlow 30s linear infinite;
+}
+
+.ida-image-track img{
+  height: 220px;
+  width: auto;
+  object-fit: contain;
+  display: block;
+  flex: 0 0 auto;
+  filter:
+    drop-shadow(0 0 24px rgba(0,245,255,0.18))
+    drop-shadow(0 24px 42px rgba(0,0,0,0.44));
+  opacity: 0.96;
+}
+
+@keyframes idaImageFlow{
+  0%{
+    transform: translateX(0);
+  }
+  100%{
+    transform: translateX(-50%);
+  }
+}
+
+@media(max-width: 900px){
+  .ida-section{
+    padding: 70px 22px 110px;
+  }
+
+  .ida-info-box{
+    padding: 32px 26px;
+    border-radius: 28px;
+  }
+
+  .ida-image-track{
+    gap: 46px;
+  }
+
+  .ida-image-track img{
+    height: 150px;
+  }
+}
+  .labeled-images{
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.labeled-image-row{
+  display: grid;
+  grid-template-columns: 1fr 220px 1fr;
+  align-items: center;
+  gap: 18px;
+  min-height: 180px;
+  padding: 14px 18px;
+  border-radius: 24px;
+  border: 1px solid rgba(0,245,255,0.16);
+  background:
+    radial-gradient(circle at center, rgba(0,245,255,0.08), transparent 60%),
+    rgba(3,8,18,0.44);
+}
+
+.labeled-image-row img{
+  width: 220px;
+  height: 150px;
+  object-fit: contain;
+  display: block;
+  margin: 0 auto;
+  filter:
+    drop-shadow(0 0 18px rgba(0,245,255,0.16))
+    drop-shadow(0 18px 30px rgba(0,0,0,0.36));
+}
+
+.mini-label{
+  color: rgba(225,235,245,0.78);
+}
+
+.mini-label.left{
+  text-align: right;
+}
+
+.mini-label.right{
+  text-align: left;
+}
+
+.mini-label strong{
+  display: block;
+  color: #00f5ff;
+  font-size: 15px;
+  font-weight: 800;
+  margin-bottom: 7px;
+}
+
+.mini-label span{
+  display: block;
+  font-size: 13px;
+  line-height: 1.5;
+  color: rgba(220,230,240,0.62);
+}
+
+@media(max-width: 1050px){
+  .labeled-image-row{
+    grid-template-columns: 1fr;
+    text-align: center;
+  }
+
+  .mini-label.left,
+  .mini-label.right{
+    text-align: center;
+  }
+
+  .labeled-image-row img{
+    width: 230px;
+    height: 150px;
+  }
+}
+  .platforms-showcase{
+  width: min(1400px, 94%);
+  margin: 40px auto 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+
+.platform-row{
+  min-height: 210px;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: 34px;
+  padding: 22px 34px;
+  border: 1px solid rgba(0, 225, 255, 0.16);
+  border-radius: 24px;
+  background: linear-gradient(90deg, rgba(0, 18, 32, 0.42), rgba(0, 35, 55, 0.22), rgba(0, 18, 32, 0.42));
+  backdrop-filter: blur(8px);
+}
+
+.platform-text{
+  color: rgba(230, 242, 255, 0.88);
+  max-width: 360px;
+}
+
+.platform-text h4{
+  margin: 0 0 10px 0;
+  font-size: 24px;
+  font-weight: 700;
+  color: #8ef7ff;
+  letter-spacing: 0.02em;
+}
+
+.platform-text p{
+  margin: 0;
+  font-size: 16px;
+  line-height: 1.7;
+  color: rgba(220, 232, 245, 0.72);
+}
+
+.platform-text.left{
+  text-align: right;
+  justify-self: end;
+}
+
+.platform-text.right{
+  text-align: left;
+  justify-self: start;
+}
+
+.platform-image{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.platform-image img{
+  max-width: 260px;
+  width: 100%;
+  height: auto;
+  display: block;
+  object-fit: contain;
+  filter: drop-shadow(0 0 22px rgba(0, 225, 255, 0.16));
+  transition: transform 0.35s ease, filter 0.35s ease;
+}
+
+.platform-row:hover .platform-image img{
+  transform: translateY(-4px) scale(1.03);
+  filter: drop-shadow(0 0 30px rgba(0, 225, 255, 0.24));
+}
+  @media (max-width: 1100px){
+  .platform-row{
+    grid-template-columns: 1fr;
+    text-align: center;
+    gap: 18px;
+    padding: 26px 22px;
+  }
+
+  .platform-text.left,
+  .platform-text.right{
+    text-align: center;
+    justify-self: center;
+    max-width: 100%;
+  }
+
+  .platform-image img{
+    max-width: 220px;
+  }
+}
+
+  .platform-trigger{
+  border: none;
+  background: transparent;
+  padding: 0;
+  cursor: pointer;
+  display: block;
+  margin: 0 auto;
+}
+
+.platform-trigger img{
+  width: 220px;
+  height: 150px;
+  object-fit: contain;
+  display: block;
+  filter:
+    drop-shadow(0 0 18px rgba(0,245,255,0.16))
+    drop-shadow(0 18px 30px rgba(0,0,0,0.36));
+  transition: 0.35s ease;
+}
+
+.platform-trigger:hover img{
+  transform: scale(1.06) translateY(-4px);
+  filter:
+    drop-shadow(0 0 26px rgba(0,245,255,0.30))
+    drop-shadow(0 22px 36px rgba(0,0,0,0.44));
+}
+
+.platform-gallery-area{
+  width: min(1320px, 96%);
+  margin: 34px auto 0;
+  position: relative;
+  z-index: 6;
+}
+
+.platform-gallery-panel{
+  display: none;
+  border-radius: 34px;
+  border: 1px solid rgba(0,245,255,0.20);
+  background:
+    radial-gradient(circle at 20% 20%, rgba(0,245,255,0.12), transparent 34%),
+    radial-gradient(circle at 82% 78%, rgba(108,59,255,0.15), transparent 34%),
+    rgba(4,10,22,0.76);
+  backdrop-filter: blur(18px);
+  box-shadow:
+    0 40px 120px rgba(0,0,0,0.40),
+    inset 0 1px 0 rgba(255,255,255,0.07);
+  padding: 34px 36px 40px;
+  overflow: hidden;
+  position: relative;
+}
+
+.platform-gallery-panel.active{
+  display: block;
+  animation: galleryOpen 0.45s ease forwards;
+}
+
+@keyframes galleryOpen{
+  from{
+    opacity: 0;
+    transform: translateY(24px);
+  }
+  to{
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.platform-gallery-panel::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  background-image:
+    linear-gradient(rgba(0,245,255,0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0,245,255,0.04) 1px, transparent 1px);
+  background-size: 42px 42px;
+  opacity: 0.42;
+  pointer-events:none;
+}
+
+.gallery-header{
+  position: relative;
+  z-index: 2;
+  text-align: center;
+  margin-bottom: 34px;
+}
+
+.gallery-header small{
+  display: block;
+  color: rgba(0,245,255,0.82);
+  font-size: 12px;
+  letter-spacing: 2.4px;
+  font-weight: 800;
+  margin-bottom: 12px;
+}
+
+.gallery-header h3{
+  color: #f5fbff;
+  font-size: clamp(30px, 3.4vw, 54px);
+  line-height: 1.1;
+  letter-spacing: -1.2px;
+  margin: 0;
+}
+
+.gallery-grid{
+  position: relative;
+  z-index: 2;
+  display: grid;
+  gap: 26px;
+  align-items: stretch;
+}
+
+.gallery-grid.grid-4{
+  grid-template-columns: repeat(4, 1fr);
+}
+
+.gallery-grid.grid-6{
+  grid-template-columns: repeat(3, 1fr);
+}
+
+.gallery-item{
+  min-height: 240px;
+  border-radius: 26px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 18px;
+  padding: 22px;
+  background: rgba(3,8,18,0.34);
+  border: 1px solid rgba(0,245,255,0.14);
+  transition: 0.35s ease;
+}
+
+.gallery-item:hover{
+  transform: translateY(-6px);
+  border-color: rgba(0,245,255,0.32);
+  box-shadow: 0 0 36px rgba(0,245,255,0.12);
+}
+
+.gallery-item img{
+  width: 100%;
+  height: 170px;
+  object-fit: contain;
+  display: block;
+  filter:
+    drop-shadow(0 0 24px rgba(0,245,255,0.18))
+    drop-shadow(0 24px 42px rgba(0,0,0,0.44));
+}
+
+.gallery-item span{
+  color: rgba(235,245,255,0.88);
+  font-size: 16px;
+  font-weight: 800;
+  letter-spacing: 0.3px;
+  text-align: center;
+}
+
+@media(max-width: 1100px){
+  .gallery-grid.grid-4,
+  .gallery-grid.grid-6{
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media(max-width: 700px){
+  .platform-gallery-panel{
+    padding: 28px 20px 32px;
+    border-radius: 28px;
+  }
+
+  .gallery-grid.grid-4,
+  .gallery-grid.grid-6{
+    grid-template-columns: 1fr;
+  }
+
+  .gallery-item img{
+    height: 150px;
+  }
+}
+  </style>
+</head>
+<body>
+
+  <div class="cursor"></div>
+  <div class="mouse-glow"></div>
+
+  <header>
+    <div class="logo">VISION TECHNOLOGIES</div>
+   <nav>
+  <a href="index.html">Ana Sayfa</a>
+  <a href="otonom-araclar.html">Otonom Araçlar</a>
+  <a href="proje.html">Proje</a>
+  <a href="simulasyon.html">Simülasyon</a>
+</nav>
+  </header>
+
+ <section class="hero">
+  <div class="hero-content">
+    <div class="hero-badge">
+      AUTONOMOUS VEHICLE TECHNOLOGIES
+    </div>
+
+    <h1 id="title">
+      OTONOM ARAÇ<br>
+      TEKNOLOJİLERİ
+    </h1>
+
+    <div class="hero-marquee">
+      <div class="hero-marquee-track">
+        <span>
+          Yapay Zekâ • Sensör Verisi • Görüntü İşleme • Karar Algoritmaları • Güvenli Kontrol Sistemleri •
+        </span>
+        <span>
+          Yapay Zekâ • Sensör Verisi • Görüntü İşleme • Karar Algoritmaları • Güvenli Kontrol Sistemleri •
+        </span>
+      </div>
+    </div>
+  </div>
+</section>
+  
+
+<section class="section autonomous-info-section">
+  <div class="autonomous-info-wrapper">
+
+    <div class="autonomous-info-card">
+      <div class="project-info-header">
+        <small>AUTONOMOUS VEHICLE TECHNOLOGIES</small>
+        <strong>Otonom Araç Teknolojileri</strong>
+      </div>
+
+      <div class="autonomous-info-content">
+        <p>
+          Otonom araçlar, insan müdahalesine ihtiyaç duymadan görev icra edebilen ve yapay zekâ destekli karar mekanizmalarıyla donatılmış gelişmiş sistemlerdir. Radar, lidar, termal kameralar ve gelişmiş sensörler sayesinde çevrelerini detaylı biçimde algılar ve anlık taktiksel değerlendirmeler yapabilirler.
+        </p>
+
+        <p>
+          Savunma sanayisinde bu araçlar; keşif, gözetleme, sınır güvenliği ve operasyonel destek gibi kritik görevlerde aktif olarak kullanılmaktadır. İnsansız hava, kara ve deniz araçları (İHA, İKA, İDA) olarak farklı platformlarda geliştirilen otonom sistemler, personelin riskli bölgelerde bulunma ihtiyacını azaltarak can güvenliğini artırır.
+        </p>
+
+        <p>
+          Zorlu arazi ve iklim koşullarında, hatta elektronik harp ortamlarında dahi görevlerini sürdürebilecek dayanıklılığa sahiptirler. Bu özellikleri sayesinde modern ordular için stratejik bir güç çarpanı haline gelmişlerdir.
+        </p>
+      </div>
+    </div>
+
+    <div class="autonomous-info-card">
+      <div class="project-info-header">
+        <small>STRATEGIC OPERATION CAPABILITY</small>
+        <strong>Sürü Teknolojisi ve Operasyonel Etkinlik</strong>
+      </div>
+
+      <div class="autonomous-info-content">
+        <p>
+          Ayrıca otonom sistemler, sürü teknolojisi sayesinde birbirleriyle koordineli hareket ederek eş zamanlı operasyonlar gerçekleştirebilir. İnsan kaynaklı hata, yorgunluk ve stres gibi faktörleri ortadan kaldırarak 7/24 kesintisiz operasyon kabiliyeti sunarlar.
+        </p>
+
+        <p>
+          Lojistik destek, mühimmat taşıma ve yaralı tahliyesi gibi görevleri hızlı ve güvenli şekilde yerine getirebilirler. Gelişmiş yapay zekâ algoritmaları sayesinde her görevden elde edilen verileri analiz ederek performanslarını sürekli geliştirirler.
+        </p>
+
+        <p>
+          Gerçek zamanlı veri aktarımı ile komuta merkezlerine anlık istihbarat sağlar ve karar alma süreçlerini hızlandırırlar. Sonuç olarak savunma sanayisinde otonom araçlar, operasyonel etkinliği artıran ve geleceğin harp konseptini şekillendiren kritik teknolojiler arasında yer almaktadır.
+        </p>
+      </div>
+    </div>
+
+ <div class="image-side-small labeled-images">
+
+  <div class="labeled-image-row">
+    <div class="mini-label left">
+      <strong>İnsansız Kara Araçları</strong>
+      <span>Keşif, lojistik ve riskli kara görevlerinde etkin çözüm.</span>
+    </div>
+
+    <button class="platform-trigger" data-target="ika-gallery">
+  <img src="otonom-1.png" alt="İnsansız Kara Araçları">
+</button>
+
+    <div class="mini-label right">
+      <strong>Kara Operasyon Gücü</strong>
+      <span>Personel güvenliğini artıran otonom kara platformu.</span>
+    </div>
+  </div>
+
+  <div class="labeled-image-row">
+    <div class="mini-label left">
+      <strong>İnsansız Hava Araçları</strong>
+      <span>Hava keşfi ve gerçek zamanlı istihbarat desteği sağlar.</span>
+    </div>
+
+   <button class="platform-trigger" data-target="iha-gallery">
+  <img src="otonom-2.png" alt="İnsansız Hava Araçları">
+</button>
+
+    <div class="mini-label right">
+      <strong>Hava Hakimiyeti</strong>
+      <span>Geniş alan tarama ve hedef takibinde yüksek performans.</span>
+    </div>
+  </div>
+
+  <div class="labeled-image-row">
+    <div class="mini-label left">
+      <strong>İnsansız Deniz Araçları</strong>
+      <span>Kıyı güvenliği ve açık deniz görevlerinde stratejik yapı.</span>
+    </div>
+
+    <button class="platform-trigger" data-target="ida-gallery">
+  <img src="otonom-3.png" alt="İnsansız Deniz Araçları">
+</button>
+
+    <div class="mini-label right">
+      <strong>Deniz Savunma Yeteneği</strong>
+      <span>Devriye, gözetleme ve savunma görevlerinde etkin çözüm.</span>
+    </div>
+  </div>
+   <div class="platform-gallery-area">
+
+  <div id="ika-gallery" class="platform-gallery-panel">
+    <div class="gallery-header">
+      <small>AUTONOMOUS GROUND VEHICLES</small>
+      <h3>İnsansız Kara Araçları (İKA)</h3>
+    </div>
+
+    <div class="gallery-grid grid-6">
+      <div class="gallery-item">
+        <img src="kara-1.png" alt="BARKAN 2">
+        <span>BARKAN 2 - Çoklu Lançer</span>
+      </div>
+
+      <div class="gallery-item">
+        <img src="kara-2.png" alt="BARKAN 2">
+        <span>BARKAN 2 - Bomba Atar</span>
+      </div>
+
+      <div class="gallery-item">
+        <img src="kara-3.png" alt="BARKAN 2">
+        <span>BARKAN 2 - Mayın Tarama</span>
+      </div>
+
+      <div class="gallery-item">
+        <img src="kara-4.png" alt="BARKAN 2">
+        <span>BARKAN 2 - Yaralı Taşıyıcı</span>
+      </div>
+
+      <div class="gallery-item">
+        <img src="kara-5.png" alt="BARKAN 2">
+        <span>BARKAN 2 - Robotik Kol</span>
+      </div>
+
+      <div class="gallery-item">
+        <img src="kara-6.png" alt="BARKAN 2">
+        <span>BARKAN 2 - Yük Taşıyıcı</span>
+      </div>
+    </div>
+  </div>
+
+  <div id="iha-gallery" class="platform-gallery-panel">
+    <div class="gallery-header">
+      <small>AUTONOMOUS AIR VEHICLES</small>
+      <h3>İnsansız Hava Araçları (İHA)</h3>
+    </div>
+
+    <div class="gallery-grid grid-4">
+      <div class="gallery-item">
+        <img src="iha-1.png" alt="BOZBEY">
+      <span>BOZBEY</span>
+      </div>
+
+      <div class="gallery-item">
+        <img src="iha-2.png" alt="ANKA III">
+         <span>ANKA III</span>
+      </div>
+
+      <div class="gallery-item">
+        <img src="iha-3.png" alt="AKSUNGUR">
+         <span>AKSUNGUR</span>
+      </div>
+
+      <div class="gallery-item">
+        <img src="iha-4.png" alt="ANKA">
+         <span>ANKA</span>
+      </div>
+    </div>
+  </div>
+
+  <div id="ida-gallery" class="platform-gallery-panel">
+    <div class="gallery-header">
+      <small>AUTONOMOUS MARITIME VEHICLES</small>
+      <h3>İnsansız Deniz Araçları (İDA)</h3>
+    </div>
+
+    <div class="gallery-grid grid-4">
+      <div class="gallery-item">
+        <img src="ida-1.png" alt="SALVO">
+         <span>SALVO</span>
+      </div>
+
+      <div class="gallery-item">
+        <img src="ida-2.png" alt="ULAQ">
+         <span>ULAQ</span>
+      </div>
+
+      <div class="gallery-item">
+        <img src="ida-3.png" alt="ALBATROS">
+         <span>ALBATROS</span>
+      </div>
+
+      <div class="gallery-item">
+        <img src="ida-4.png" alt="ÇAKA">
+         <span>ÇAKA</span>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+</section>
+  <section class="uav-section">
+  <div class="uav-info-box">
+    <small>AUTONOMOUS AIR PLATFORM</small>
+    <h2>İnsansız Hava Araçları (İHA)</h2>
+
+    <p>
+      İnsansız Hava Araçları (İHA), modern savaş doktrinlerini baştan yazan ve hava sahası
+      hakimiyetini güçlendiren en kritik otonom platformlardır. Gelişmiş optik ve radar
+      sistemleriyle donatılan bu araçlar; gerçek zamanlı istihbarat, keşif, hedef işaretleme
+      ve nokta atışı taarruz operasyonlarında kullanılır. Havada kalma sürelerinin uzunluğu
+      ve geniş alanları tarama kapasiteleriyle komuta merkezine kesintisiz, hayati durumsal
+      farkındalık sağlarlar.
+    </p>
+  </div>
+
+  <div class="uav-image-marquee">
+    <div class="uav-image-track">
+      <img src="iha-1.png" alt="İHA görseli 1">
+      <img src="iha-2.png" alt="İHA görseli 2">
+      <img src="iha-3.png" alt="İHA görseli 3">
+      <img src="iha-4.png" alt="İHA görseli 4">
+
+      <img src="iha-1.png" alt="İHA görseli 1">
+      <img src="iha-2.png" alt="İHA görseli 2">
+      <img src="iha-3.png" alt="İHA görseli 3">
+      <img src="iha-4.png" alt="İHA görseli 4">
+    </div>
+  </div>
+</section>
+  <section class="ugv-section">
+  <div class="ugv-info-box">
+    <small>AUTONOMOUS GROUND PLATFORM</small>
+    <h2>İnsansız Kara Araçları (İKA)</h2>
+
+    <p>
+      İnsansız Kara Araçları (İKA), muharebe sahasında ve zorlu arazi koşullarında personel riskini
+      en aza indirmek amacıyla tasarlanmış otonom sistemlerdir. Bu platformlar; tehlikeli bölgelerde
+      keşif-gözetleme, patlayıcı imhası, lojistik ikmal ve piyade birliklerine doğrudan ateş desteği
+      sağlama gibi kritik görevleri üstlenir. Yüksek hareket kabiliyetleri ve zırhlı yapıları sayesinde,
+      çatışma ortamlarında kara birliklerine büyük bir taktik avantaj ve güvenlik sunarlar.
+    </p>
+  </div>
+
+  <div class="ugv-image-marquee">
+    <div class="ugv-image-track">
+      <img src="kara-1.png" alt="KARA görseli 1">
+      <img src="kara-2.png" alt="KARA görseli 2">
+      <img src="kara-3.png" alt="KARA görseli 3">
+      <img src="kara-4.png" alt="KARA görseli 4">
+      <img src="kara-5.png" alt="KARA görseli 5">
+      <img src="kara-6.png" alt="KARA görseli 6">
+
+      <img src="kara-1.png" alt="KARA görseli 1">
+      <img src="kara-2.png" alt="KARA görseli 2">
+      <img src="kara-3.png" alt="KARA görseli 3">
+      <img src="kara-4.png" alt="KARA görseli 4">
+      <img src="kara-5.png" alt="KARA görseli 5">
+      <img src="kara-6.png" alt="KARA görseli 6">
+    </div>
+  </div>
+</section>
+  <section class="ida-section">
+  <div class="ida-info-box">
+    <small>AUTONOMOUS MARITIME PLATFORM</small>
+    <h2>İnsansız Deniz Araçları (İDA)</h2>
+
+    <p>
+      İnsansız Deniz Araçları (İDA), deniz yetki alanlarının savunulmasında ve açık deniz operasyonlarında stratejik üstünlük
+      sağlamak için geliştirilmiş su üstü ve su altı sistemleridir. Kıyı güvenliği, liman savunması, mayın avlama, denizaltı savunma harbi 
+      ve asimetrik tehditlere karşı koyma görevlerinde yüksek etkinlik gösterirler. İnsanlı unsurların görev yapmakta zorlandığı 
+      ağır deniz şartlarında uzun süre kesintisiz devriye atarak deniz kuvvetlerinin gücünü çarpan etkisiyle artırırlar.
+    </p>
+  </div>
+
+  <div class="ida-image-marquee">
+    <div class="ida-image-track">
+      <img src="ida-1.png" alt="İDA görsel 1">
+      <img src="ida-2.png" alt="İDA görsel 2">
+      <img src="ida-3.png" alt="İDA görsel 3">
+      <img src="ida-4.png" alt="İDA görsel 4">
+
+      <img src="ida-1.png" alt="İDA görsel 1">
+      <img src="ida-2.png" alt="İDA görsel 2">
+      <img src="ida-3.png" alt="İDA görsel 3">
+      <img src="ida-4.png" alt="İDA görsel 4">
+    </div>
+  </div>
+</section>
+  <footer>© 2026 YAĞMUR SÖNMEZ (BİLGİSAYAR MÜHENDİSİ) • Vision Technologies</footer>
+ 
+ <script>
+ /* PREMIUM MOUSE EFFECT */
+const cursor = document.querySelector(".cursor");
+const mouseGlow = document.querySelector(".mouse-glow");
+
+let mouseX = window.innerWidth / 2;
+let mouseY = window.innerHeight / 2;
+let glowX = mouseX;
+let glowY = mouseY;
+
+document.addEventListener("mousemove", (e) => {
+  mouseX = e.clientX;
+  mouseY = e.clientY;
+
+  if (cursor) {
+    cursor.style.top = mouseY + "px";
+    cursor.style.left = mouseX + "px";
+  }
+
+  createMouseTrail(mouseX, mouseY);
+});
+
+function createMouseTrail(x, y){
+  const trail = document.createElement("span");
+  trail.className = "cursor-trail";
+  trail.style.left = x + "px";
+  trail.style.top = y + "px";
+
+  document.body.appendChild(trail);
+
+  requestAnimationFrame(() => {
+    trail.style.transition = "0.7s ease";
+    trail.style.opacity = "0.65";
+    trail.style.transform = `translate(-50%, -50%) scale(${1.8 + Math.random() * 1.4})`;
+  });
+
+  setTimeout(() => {
+    trail.style.opacity = "0";
+    trail.style.transform = "translate(-50%, -50%) scale(0.2)";
+  }, 120);
+
+  setTimeout(() => {
+    trail.remove();
+  }, 760);
+}
+
+function animateMouseGlow(){
+  glowX += (mouseX - glowX) * 0.08;
+  glowY += (mouseY - glowY) * 0.08;
+
+  if(mouseGlow){
+    mouseGlow.style.left = glowX + "px";
+    mouseGlow.style.top = glowY + "px";
+  }
+
+  requestAnimationFrame(animateMouseGlow);
+}
+
+animateMouseGlow();
+
+  /* GSAP HERO */
+  /* TYPEWRITER TITLE LOOP */
+const titleElement = document.getElementById("title");
+
+const titleLines = [
+  "EL HAREKETLERİ İLE DERİN ÖĞRENME TABANLI",
+  "OTONOM ARAÇ KONTROLÜ"
+];
+
+const fullTitle = titleLines.join("\n");
+
+let typingIndex = 0;
+
+function renderTypingText(text){
+  titleElement.innerHTML = text.replace(/\n/g, "<br>");
+}
+
+function startTitleTyping(){
+  typingIndex = 0;
+  renderTypingText("");
+
+  const typingInterval = setInterval(() => {
+    typingIndex++;
+
+    const currentText = fullTitle.substring(0, typingIndex);
+    renderTypingText(currentText);
+
+    if(typingIndex >= fullTitle.length){
+      clearInterval(typingInterval);
+
+      setTimeout(() => {
+        startTitleTyping();
+      }, 8000);
+    }
+  }, 55);
+}
+
+startTitleTyping();
+
+  gsap.from(".hero-marquee", {
+  y: 30,
+  opacity: 0,
+  duration: 1.2,
+  delay: 0.35,
+  ease: "power3.out"
+});
+
+  gsap.from(".hero-badge", {
+    y: 30,
+    opacity: 0,
+    duration: 1,
+    delay: 0.15,
+    ease: "power3.out"
+  });
+/* FLU CODE FLOW BACKGROUND */
+const codeCanvas = document.createElement("canvas");
+const codeCtx = codeCanvas.getContext("2d");
+
+codeCanvas.style.position = "fixed";
+codeCanvas.style.top = "0";
+codeCanvas.style.left = "0";
+codeCanvas.style.width = "100%";
+codeCanvas.style.height = "100%";
+codeCanvas.style.zIndex = "-5";
+codeCanvas.style.pointerEvents = "none";
+codeCanvas.style.opacity = "0.28";
+codeCanvas.style.filter = "blur(0.7px)";
+document.body.appendChild(codeCanvas);
+
+function resizeCodeCanvas(){
+  codeCanvas.width = window.innerWidth;
+  codeCanvas.height = window.innerHeight;
+}
+
+resizeCodeCanvas();
+
+const codeWords = [
+  "AI", "VISION", "DRONE", "SYSTEM", "TRACK", "DATA",
+  "SCAN", "CORE", "UAV", "SIGNAL", "TARGET", "VECTOR",
+  "0101", "1100", "AUTH", "NODE", "SYNC", "MODEL"
+];
+
+const codeStreams = Array.from({ length: 62 }, () => ({
+  x: Math.random() * window.innerWidth,
+  y: Math.random() * window.innerHeight,
+  speed: 0.35 + Math.random() * 0.85,
+  size: 10 + Math.random() * 8,
+  alpha: 0.08 + Math.random() * 0.22,
+  word: codeWords[Math.floor(Math.random() * codeWords.length)]
+}));
+
+function drawCodeFlow(){
+  codeCtx.clearRect(0, 0, codeCanvas.width, codeCanvas.height);
+
+  codeCtx.fillStyle = "rgba(3, 4, 10, 0.12)";
+  codeCtx.fillRect(0, 0, codeCanvas.width, codeCanvas.height);
+
+  codeStreams.forEach((stream, index) => {
+    codeCtx.font = `${stream.size}px monospace`;
+    codeCtx.fillStyle = `rgba(0, 245, 255, ${stream.alpha})`;
+
+    const repeatCount = 4 + Math.floor(Math.random() * 3);
+
+    for(let i = 0; i < repeatCount; i++){
+      const text = codeWords[(index + i) % codeWords.length];
+      codeCtx.fillText(text, stream.x, stream.y - i * stream.size * 1.8);
+    }
+
+    stream.y += stream.speed;
+    stream.x += Math.sin(stream.y * 0.006) * 0.18;
+
+    if(stream.y > codeCanvas.height + 120){
+      stream.y = -80;
+      stream.x = Math.random() * codeCanvas.width;
+      stream.word = codeWords[Math.floor(Math.random() * codeWords.length)];
+    }
+  });
+
+  requestAnimationFrame(drawCodeFlow);
+}
+
+drawCodeFlow();
+
+window.addEventListener("resize", resizeCodeCanvas);
+  /* THREE JS */
+  const scene = new THREE.Scene();
+  scene.fog = new THREE.Fog(0x03040A, 14, 42);
+
+  const camera = new THREE.PerspectiveCamera(
+    56,
+    window.innerWidth / window.innerHeight,
+    0.1,
+    1000
+  );
+
+  const renderer = new THREE.WebGLRenderer({
+    alpha: true,
+    antialias: true
+  });
+
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+  renderer.setSize(window.innerWidth, window.innerHeight);
+  renderer.setClearColor(0x03040A, 0);
+  document.body.appendChild(renderer.domElement);
+
+  camera.position.set(1.5, 5.4, 10.4);
+  /* LIGHTS */
+  const ambient = new THREE.AmbientLight(0xffffff, 0.9);
+  scene.add(ambient);
+
+  const keyLight = new THREE.PointLight(0x00f5ff, 3.0, 70);
+  keyLight.position.set(5.5, 5, 8);
+  scene.add(keyLight);
+
+  const rimLight = new THREE.PointLight(0x6c3bff, 1.9, 70);
+  rimLight.position.set(-6, 3, 7);
+  scene.add(rimLight);
+
+  const fillLight = new THREE.PointLight(0xffffff, 1.25, 55);
+  fillLight.position.set(0, -1.5, 10);
+  scene.add(fillLight);
+
+  const underGlow = new THREE.PointLight(0x00f5ff, 0.55, 35);
+  underGlow.position.set(0, -3, 4);
+  scene.add(underGlow);
+
+  /* MATERIALS */
+  const matteBlack = new THREE.MeshStandardMaterial({
+    color: 0x0a1018,
+    metalness: 0.95,
+    roughness: 0.3
+  });
+
+  const graphite = new THREE.MeshStandardMaterial({
+  color: 0x182a42,
+  metalness: 0.86,
+  roughness: 0.22
+  });
+
+  const darkPanel = new THREE.MeshStandardMaterial({
+    color: 0x060b12,
+    metalness: 0.92,
+    roughness: 0.22
+  });
+
+ const cyanGlow = new THREE.MeshStandardMaterial({
+  color: 0x00f5ff,
+  emissive: 0x00d9ff,
+  emissiveIntensity: 0.75,
+  metalness: 0.55,
+  roughness: 0.16
+});
+
+  const glass = new THREE.MeshStandardMaterial({
+    color: 0xcffbff,
+    emissive: 0x003944,
+    emissiveIntensity: 0.28,
+    metalness: 0.2,
+    roughness: 0.08,
+    transparent: true,
+    opacity: 0.9
+  });
+
+  const propMat = new THREE.MeshStandardMaterial({
+    color: 0xe0fbff,
+    emissive: 0x00f5ff,
+    emissiveIntensity: 0.14,
+    transparent: true,
+    opacity: 0.76,
+    metalness: 0.32,
+    roughness: 0.28
+  });
+
+  const skidMaterial = new THREE.MeshStandardMaterial({
+    color: 0x8b97aa,
+    metalness: 0.62,
+    roughness: 0.36
+  });
+
+  /* MAIN GROUP */
+  const droneGroup = new THREE.Group();
+  droneGroup.position.set(0, 0.15, 0);
+  droneGroup.scale.set(1.08, 1.08, 1.08);
+  scene.add(droneGroup);
+
+  /* BODY - DAHA ESTETİK VE PROFESYONEL */
+  const coreBody = new THREE.Mesh(
+    new THREE.CylinderGeometry(1.02, 1.12, 0.42, 8),
+    matteBlack
+  );
+  coreBody.rotation.y = Math.PI / 8;
+  droneGroup.add(coreBody);
+
+  const topDeck = new THREE.Mesh(
+    new THREE.CylinderGeometry(0.72, 0.84, 0.22, 8),
+    graphite
+  );
+  topDeck.position.y = 0.3;
+  topDeck.rotation.y = Math.PI / 8;
+  droneGroup.add(topDeck);
+
+  const lowerDeck = new THREE.Mesh(
+    new THREE.CylinderGeometry(0.82, 0.92, 0.18, 8),
+    darkPanel
+  );
+  lowerDeck.position.y = -0.28;
+  lowerDeck.rotation.y = Math.PI / 8;
+  droneGroup.add(lowerDeck);
+
+  /* SIDE ARMOR PANELS */
+  const sidePanelL = new THREE.Mesh(
+    new THREE.BoxGeometry(1.15, 0.18, 0.54),
+    graphite
+  );
+  sidePanelL.position.set(-0.92, 0.04, 0);
+  sidePanelL.rotation.z = -0.18;
+  droneGroup.add(sidePanelL);
+
+  const sidePanelR = new THREE.Mesh(
+    new THREE.BoxGeometry(1.15, 0.18, 0.54),
+    graphite
+  );
+  sidePanelR.position.set(0.92, 0.04, 0);
+  sidePanelR.rotation.z = 0.18;
+  droneGroup.add(sidePanelR);
+
+  /* NOSE */
+  const nose = new THREE.Mesh(
+    new THREE.ConeGeometry(0.36, 0.88, 4),
+    graphite
+  );
+  nose.rotation.x = Math.PI / 2;
+  nose.rotation.z = Math.PI / 4;
+  nose.position.set(0, 0.03, 1.05);
+  droneGroup.add(nose);
+
+  const frontGlass = new THREE.Mesh(
+    new THREE.BoxGeometry(0.68, 0.14, 0.1),
+    glass
+  );
+  frontGlass.position.set(0, 0.1, 1.28);
+  droneGroup.add(frontGlass);
+
+  const frontGlow = new THREE.Mesh(
+    new THREE.BoxGeometry(0.42, 0.06, 0.08),
+    cyanGlow
+  );
+  frontGlow.position.set(0, -0.03, 1.18);
+  droneGroup.add(frontGlow);
+
+  /* CAMERA / SENSOR */
+  const cameraMount = new THREE.Mesh(
+    new THREE.CylinderGeometry(0.04, 0.04, 0.24, 12),
+    graphite
+  );
+  cameraMount.position.set(0, -0.45, 0.62);
+  droneGroup.add(cameraMount);
+
+  const cameraBall = new THREE.Mesh(
+    new THREE.SphereGeometry(0.22, 20, 16),
+    darkPanel
+  );
+  cameraBall.scale.set(1, 0.8, 1);
+  cameraBall.position.set(0, -0.63, 0.72);
+  droneGroup.add(cameraBall);
+
+  const cameraLens = new THREE.Mesh(
+    new THREE.CylinderGeometry(0.1, 0.1, 0.06, 24),
+    glass
+  );
+  cameraLens.rotation.x = Math.PI / 2;
+  cameraLens.position.set(0, -0.63, 0.94);
+  droneGroup.add(cameraLens);
+
+  /* REAR FINS */
+  const finL = new THREE.Mesh(
+    new THREE.BoxGeometry(0.1, 0.45, 0.26),
+    graphite
+  );
+  finL.position.set(-0.38, 0.42, -0.8);
+  finL.rotation.z = 0.14;
+  droneGroup.add(finL);
+
+  const finR = new THREE.Mesh(
+    new THREE.BoxGeometry(0.1, 0.45, 0.26),
+    graphite
+  );
+  finR.position.set(0.38, 0.42, -0.8);
+  finR.rotation.z = -0.14;
+  droneGroup.add(finR);
+
+  /* ARM + MOTOR SYSTEM */
+  const propellers = [];
+  const glowDots = [];
+
+  function createArm(angle) {
+    const armGroup = new THREE.Group();
+    armGroup.rotation.y = angle;
+
+    const arm = new THREE.Mesh(
+      new THREE.BoxGeometry(2.2, 0.12, 0.16),
+      graphite
+    );
+    arm.position.x = 1.06;
+    arm.position.y = 0.1;
+    armGroup.add(arm);
+
+    const support = new THREE.Mesh(
+      new THREE.BoxGeometry(0.9, 0.08, 0.1),
+      darkPanel
+    );
+    support.position.set(0.52, -0.06, 0);
+    support.rotation.z = -0.26;
+    armGroup.add(support);
+
+    const motorGroup = new THREE.Group();
+    motorGroup.position.set(2.12, 0.1, 0);
+
+    const motorBase = new THREE.Mesh(
+      new THREE.CylinderGeometry(0.26, 0.26, 0.22, 28),
+      darkPanel
+    );
+    motorGroup.add(motorBase);
+
+    const motorTop = new THREE.Mesh(
+      new THREE.CylinderGeometry(0.18, 0.2, 0.16, 24),
+      graphite
+    );
+    motorTop.position.y = 0.18;
+    motorGroup.add(motorTop);
+
+    const glowDot = new THREE.Mesh(
+      new THREE.SphereGeometry(0.05, 12, 12),
+      cyanGlow
+    );
+    glowDot.position.set(0, 0.28, 0);
+    motorGroup.add(glowDot);
+    glowDots.push(glowDot);
+
+    const propGroup = new THREE.Group();
+    propGroup.position.y = 0.32;
+
+    const hub = new THREE.Mesh(
+      new THREE.CylinderGeometry(0.07, 0.07, 0.05, 14),
+      cyanGlow
+    );
+    hub.rotation.x = Math.PI / 2;
+    propGroup.add(hub);
+
+    const blade1 = new THREE.Mesh(
+      new THREE.BoxGeometry(1.02, 0.03, 0.1),
+      propMat
+    );
+    propGroup.add(blade1);
+
+    const blade2 = new THREE.Mesh(
+      new THREE.BoxGeometry(1.02, 0.03, 0.1),
+      propMat
+    );
+    blade2.rotation.y = Math.PI / 2;
+    propGroup.add(blade2);
+
+    const blurDisc = new THREE.Mesh(
+      new THREE.CylinderGeometry(0.58, 0.58, 0.012, 36),
+      new THREE.MeshBasicMaterial({
+        color: 0x00f5ff,
+        transparent: true,
+        opacity: 0.05,
+        side: THREE.DoubleSide
+      })
+    );
+    blurDisc.rotation.x = Math.PI / 2;
+    blurDisc.position.y = 0.01;
+    propGroup.add(blurDisc);
+
+    motorGroup.add(propGroup);
+    propellers.push(propGroup);
+
+    armGroup.add(motorGroup);
+    droneGroup.add(armGroup);
+  }
+
+  createArm(Math.PI / 4);
+  createArm(3 * Math.PI / 4);
+  createArm(-Math.PI / 4);
+  createArm(-3 * Math.PI / 4);
+
+  /* LANDING SKIDS */
+  function createSkidRail(x) {
+    const legFront = new THREE.Mesh(
+      new THREE.CylinderGeometry(0.03, 0.03, 0.86, 12),
+      skidMaterial
+    );
+    legFront.position.set(x, -0.62, 0.45);
+    legFront.rotation.z = x > 0 ? 0.16 : -0.16;
+    droneGroup.add(legFront);
+
+    const legBack = new THREE.Mesh(
+      new THREE.CylinderGeometry(0.03, 0.03, 0.86, 12),
+      skidMaterial
+    );
+    legBack.position.set(x, -0.62, -0.45);
+    legBack.rotation.z = x > 0 ? 0.16 : -0.16;
+    droneGroup.add(legBack);
+
+    const rail = new THREE.Mesh(
+      new THREE.CylinderGeometry(0.03, 0.03, 1.28, 12),
+      skidMaterial
+    );
+    rail.position.set(x, -1.0, 0);
+    rail.rotation.x = Math.PI / 2;
+    droneGroup.add(rail);
+  }
+
+  createSkidRail(0.55);
+  createSkidRail(-0.55);
+
+  /* ARKA PROFESYONEL HALKALAR */
+  function createRing(radius, tube, color, opacity, rotX, rotY, rotZ, z) {
+    const ring = new THREE.Mesh(
+      new THREE.TorusGeometry(radius, tube, 16, 140),
+      new THREE.MeshBasicMaterial({
+        color: color,
+        transparent: true,
+        opacity: opacity
+      })
+    );
+    ring.rotation.set(rotX, rotY, rotZ);
+    ring.position.z = z;
+    scene.add(ring);
+    return ring;
+  }
+
+  const ring1 = createRing(3.4, 0.028, 0x00f5ff, 0.22, 1.16, 0.22, 0.0, -1.0);
+const ring2 = createRing(4.2, 0.022, 0x6c3bff, 0.16, 1.34, -0.22, 0.1, -1.55);
+const ring3 = createRing(5.0, 0.018, 0xffffff, 0.10, 1.24, 0.12, -0.15, -2.0);
+const ring4 = createRing(5.8, 0.016, 0x00f5ff, 0.10, 1.42, -0.18, 0.22, -2.3);
+
+  /* PARTICLES */
+  const particleCount = 260;
+  const positions = new Float32Array(particleCount * 3);
+
+  for (let i = 0; i < particleCount; i++) {
+   positions[i * 3] = (Math.random() - 0.5) * 30;
+positions[i * 3 + 1] = (Math.random() - 0.5) * 18;
+positions[i * 3 + 2] = (Math.random() - 0.5) * 24 - 3;
+  }
+
+  const particleGeo = new THREE.BufferGeometry();
+  particleGeo.setAttribute("position", new THREE.BufferAttribute(positions, 3));
+
+  const particleMat = new THREE.PointsMaterial({
+  color: 0x00f5ff,
+  size: 0.038,
+  transparent: true,
+  opacity: 0.34
+});
+
+  const particles = new THREE.Points(particleGeo, particleMat);
+  scene.add(particles);
+
+  /* MOUSE */
+  const mouse = { x: 0, y: 0, tx: 0, ty: 0 };
+
+  document.addEventListener("mousemove", (e) => {
+    mouse.tx = (e.clientX / window.innerWidth - 0.5) * 2;
+    mouse.ty = (e.clientY / window.innerHeight - 0.5) * 2;
+  });
+
+  /* BAŞLANGIÇ AÇISI - BİRAZ DAHA YUKARIDAN */
+ droneGroup.rotation.x = 0.30;
+droneGroup.rotation.z = 0.14;
+  /* ANIMATION */
+  const clock = new THREE.Clock();
+
+  function animate() {
+    requestAnimationFrame(animate);
+    const t = clock.getElapsedTime();
+
+    mouse.x += (mouse.tx - mouse.x) * 0.03;
+    mouse.y += (mouse.ty - mouse.y) * 0.03;
+
+    /* ANA DÖNÜŞ */
+    droneGroup.rotation.y += 0.0105;
+
+    /* YUKARIDAN PROFESYONEL BAKIŞ */
+   droneGroup.rotation.x = 0.30 + Math.sin(t * 0.65) * 0.012 - mouse.y * 0.008;
+   droneGroup.rotation.z = 0.12 + Math.cos(t * 0.45) * 0.009 + mouse.x * 0.010;
+    droneGroup.position.y = 0.12 + Math.sin(t * 1.25) * 0.08;
+
+    propellers.forEach((prop, i) => {
+      prop.rotation.y += i % 2 === 0 ? 0.48 : -0.48;
+    });
+
+    glowDots.forEach((dot, i) => {
+      dot.material.emissiveIntensity = 0.35 + (Math.sin(t * 2 + i) + 1) * 0.08;
+    });
+
+    ring1.rotation.z += 0.0018;
+    ring2.rotation.z -= 0.0012;
+    ring3.rotation.z += 0.0008;
+    ring4.rotation.z -= 0.0006;
+
+    particles.rotation.y += 0.00055;
+
+  camera.position.x += (((mouse.x * 0.14) + 1.5) - camera.position.x) * 0.02;
+camera.position.y += (((-mouse.y * 0.05) + 5.4) - camera.position.y) * 0.02;
+camera.position.z += ((10.4) - camera.position.z) * 0.02;
+camera.lookAt(0, -0.02, 0);
+    renderer.render(scene, camera);
+  }
+
+  animate();
+
+  /* RESIZE */
+  window.addEventListener("resize", () => {
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    camera.aspect = window.innerWidth / window.innerHeight;
+    camera.updateProjectionMatrix();
+  });
+    /* PLATFORM CLICK GALLERY */
+const platformTriggers = document.querySelectorAll(".platform-trigger");
+const galleryPanels = document.querySelectorAll(".platform-gallery-panel");
+
+platformTriggers.forEach((trigger) => {
+  trigger.addEventListener("click", () => {
+    const targetId = trigger.getAttribute("data-target");
+    const targetPanel = document.getElementById(targetId);
+
+    galleryPanels.forEach((panel) => {
+      panel.classList.remove("active");
+    });
+
+    if(targetPanel){
+      targetPanel.classList.add("active");
+
+      setTimeout(() => {
+        targetPanel.scrollIntoView({
+          behavior: "smooth",
+          block: "start"
+        });
+      }, 80);
+    }
+  });
+});
+ </script>
